@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AWS on JScott.me</title>
+    <link>https://blog.jscott.me/tags/aws/</link>
+    <description>Recent content in AWS on JScott.me</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Mon, 19 Mar 2018 09:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.jscott.me/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Using Lifecycle Hooks to better understand your AWS environment</title>
+      <link>https://blog.jscott.me/post/using-lifecycle-hooks-to-better-understand-your-aws-environment/</link>
+      <pubDate>Mon, 19 Mar 2018 09:00:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/using-lifecycle-hooks-to-better-understand-your-aws-environment/</guid>
+      <description>If you have a large number of EC2 instances running in an AWS environment, it can be difficult to really understand what is happening in production.
+In particular, when you use autoscaling groups, it can be difficult to notice when and why your instances are dying and requiring a restart. For the most part this isn&amp;rsquo;t a problem, but in rare cases it&amp;rsquo;s possible to run up large bills by restarting instances too frequently (for example if a system fails to start and so is constantly rebooted), and though usually you&amp;rsquo;re perfectly happy for your machines to die and be automatically replaced, sometimes it can be useful to jump on to a dead machine to figure out what went wrong.</description>
+    </item>
+    
+  </channel>
+</rss>

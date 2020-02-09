@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code: Day 3 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code: Day 3" />
+<meta property="og:description" content="For Day 3, the challenge is to calculate the Manhattan Distance for a given number given a formula for calculating a spiral of numbers. My initial brute force solution, in Javascript, is shown below:
+const UP = [0, -1]; const DOWN = [0, 1]; const LEFT = [-1, 0]; const RIGHT = [1, 0]; const X = 0; const Y = 1; function get_position(n) { let pos = [0, 0]; let x_range = [-1, 1]; let y_range = [-1, 1]; let direction = RIGHT; let number = 1; while (number &lt; n) { number &#43;= 1 pos[X] &#43;= direction[X] pos[Y] &#43;= direction[Y] if (direction == RIGHT &amp;&amp; pos[X] == x_range[1]) { direction = UP; x_range[1] &#43;= 1; } else if (direction == LEFT &amp;&amp; pos[X] == x_range[0]) { direction = DOWN; x_range[0] -= 1; } else if (direction == UP &amp;&amp; pos[Y] == y_range[0]) { direction = LEFT; y_range[0] -= 1; } else if (direction == DOWN &amp;&amp; pos[Y] == y_range[1]) { direction = RIGHT; y_range[1] &#43;= 1; } } return pos; } const position = get_position(289326); console." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-day-3/" />
+<meta property="article:published_time" content="2017-12-03T08:53:41+00:00" />
+<meta property="article:modified_time" content="2017-12-03T08:53:41+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code: Day 3"/>
+<meta name="twitter:description" content="For Day 3, the challenge is to calculate the Manhattan Distance for a given number given a formula for calculating a spiral of numbers. My initial brute force solution, in Javascript, is shown below:
+const UP = [0, -1]; const DOWN = [0, 1]; const LEFT = [-1, 0]; const RIGHT = [1, 0]; const X = 0; const Y = 1; function get_position(n) { let pos = [0, 0]; let x_range = [-1, 1]; let y_range = [-1, 1]; let direction = RIGHT; let number = 1; while (number &lt; n) { number &#43;= 1 pos[X] &#43;= direction[X] pos[Y] &#43;= direction[Y] if (direction == RIGHT &amp;&amp; pos[X] == x_range[1]) { direction = UP; x_range[1] &#43;= 1; } else if (direction == LEFT &amp;&amp; pos[X] == x_range[0]) { direction = DOWN; x_range[0] -= 1; } else if (direction == UP &amp;&amp; pos[Y] == y_range[0]) { direction = LEFT; y_range[0] -= 1; } else if (direction == DOWN &amp;&amp; pos[Y] == y_range[1]) { direction = RIGHT; y_range[1] &#43;= 1; } } return pos; } const position = get_position(289326); console."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code: Day 3</h1>
+			<div class="meta">Posted at &mdash; Dec 3, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<p>For <a href="http://adventofcode.com/2017/day/3">Day 3</a>, the challenge is to calculate the Manhattan Distance for a given number given a formula for calculating a spiral of numbers. My initial brute force solution, in Javascript, is shown below:</p>
+
+<pre><code class="language-language-javascript">const UP = [0, -1];
+const DOWN = [0, 1];
+const LEFT = [-1, 0];
+const RIGHT = [1, 0];
+
+const X = 0;
+const Y = 1;
+
+function get_position(n) {
+    let pos = [0, 0];
+    let x_range = [-1, 1];
+    let y_range = [-1, 1];
+    let direction = RIGHT;
+    let number = 1;
+
+    while (number &lt; n) {
+        number += 1
+        pos[X] += direction[X]
+        pos[Y] += direction[Y]
+
+        if (direction == RIGHT &amp;&amp; pos[X] == x_range[1]) {
+            direction = UP;
+            x_range[1] += 1;
+        } else if (direction == LEFT &amp;&amp; pos[X] == x_range[0]) {
+            direction = DOWN;
+            x_range[0] -= 1;
+        } else if (direction == UP &amp;&amp; pos[Y] == y_range[0]) {
+            direction = LEFT;
+            y_range[0] -= 1;
+        } else if (direction == DOWN &amp;&amp; pos[Y] == y_range[1]) {
+            direction = RIGHT;
+            y_range[1] += 1;
+        }
+    }
+
+    return pos;
+}
+
+const position = get_position(289326);
+console.log(Math.abs(position[0]) + Math.abs(position[1]));
+</code></pre>
+
+<p>And for Part 2:</p>
+
+<pre><code class="language-language-javascript">const HashMap = require(&quot;HashMap&quot;);
+const UP = [0, -1];
+const DOWN = [0, 1];
+const LEFT = [-1, 0];
+const RIGHT = [1, 0];
+
+const X = 0;
+const Y = 1;
+
+function get_value_greater_than(n) {
+    const values = new HashMap();
+    values.set([0, 0], 1);
+
+    let pos =  [0, 0];
+    let x_range = [-1, 1];
+    let y_range = [-1, 1];
+    let direction = RIGHT;
+
+    function sum_adjacent(pos) {
+        adjacent = [
+            [pos[X] - 1, pos[Y] - 1],
+            [pos[X], pos[Y] - 1],
+            [pos[X] + 1, pos[Y] - 1],
+            [pos[X] - 1, pos[Y]],
+            [pos[X] + 1, pos[Y]],
+            [pos[X] - 1, pos[Y] + 1],
+            [pos[X], pos[Y] + 1],
+            [pos[X] + 1, pos[Y] + 1],
+        ];
+
+        return adjacent.map(x =&gt; values.get(x) || 0).reduce((acc, cur) =&gt; acc + cur);
+    }
+
+    while (values.get(pos) &lt; n) {
+        pos = [pos[X] + direction[X], pos[Y] + direction[Y]];
+        values.set(pos, sum_adjacent(pos));
+
+        if (direction == RIGHT &amp;&amp; pos[X] == x_range[1]) {
+            direction = UP
+            x_range[1] += 1
+        } else if (direction == LEFT &amp;&amp; pos[X] == x_range[0]) {
+            direction = DOWN
+            x_range[0] -= 1
+        } else if (direction == UP &amp;&amp; pos[Y] == y_range[0]) {
+            direction = LEFT
+            y_range[0] -= 1
+        } else if (direction == DOWN &amp;&amp; pos[Y] == y_range[1]) {
+            direction = RIGHT
+            y_range[1] += 1
+        }
+    }
+
+    return values.get(pos);
+}
+
+console.log(get_value_greater_than(289326));
+</code></pre>
+
+<p>This uses the <a href="https://www.npmjs.com/package/hashmap">hashmap</a> package, as Javascript lacks a native hashmap implementation.</p>
+
+<p>Looking at it, I can&rsquo;t immediately see a better way to do Part 2 than just looping over every value until finding one that works.</p>
+
+<p>For part one though, it looks like there should be a closed-form way of calculating the X and Y coordinates for a given value. I don&rsquo;t immediately have time to figure that out though so I&rsquo;ll return to it if I have time later.</p>
+
+<p>Advent of Code runs every day up to Christmas, <a href="http://adventofcode.com">you should join in!</a>.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

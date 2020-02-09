@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code: Day 7 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code: Day 7" />
+<meta property="og:description" content="For Day 7, the challenge is to build a graph of running programs and dependencies and then adjust the weighting. My Python code is below:
+import Queue from collections import Counter class Program: def __init__(self, line): self.parent = None line = line.split(&quot; -&gt; &quot;) if len(line) &gt; 1: self.children = [l.strip() for l in line[1].split(&quot;,&quot;)] else: self.children = [] self.name, self.weight = line[0].split(&quot; &quot;) self.weight = int(self.weight.strip()[1:-1]) @property def total_weight(self): self." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-day-7/" />
+<meta property="article:published_time" content="2017-12-08T09:01:20+00:00" />
+<meta property="article:modified_time" content="2017-12-08T09:01:20+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code: Day 7"/>
+<meta name="twitter:description" content="For Day 7, the challenge is to build a graph of running programs and dependencies and then adjust the weighting. My Python code is below:
+import Queue from collections import Counter class Program: def __init__(self, line): self.parent = None line = line.split(&quot; -&gt; &quot;) if len(line) &gt; 1: self.children = [l.strip() for l in line[1].split(&quot;,&quot;)] else: self.children = [] self.name, self.weight = line[0].split(&quot; &quot;) self.weight = int(self.weight.strip()[1:-1]) @property def total_weight(self): self."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code: Day 7</h1>
+			<div class="meta">Posted at &mdash; Dec 8, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<p>For <a href="http://adventofcode.com/2017/day/7">Day 7</a>, the challenge is to build a graph of running programs and dependencies and then adjust the weighting. My Python code is below:</p>
+
+<pre><code class="language-language-python">import Queue
+from collections import Counter
+class Program:
+    def __init__(self, line):
+        self.parent = None
+        line = line.split(&quot; -&gt; &quot;)
+        if len(line) &gt; 1:
+            self.children = [l.strip() for l in line[1].split(&quot;,&quot;)]
+        else:
+            self.children = []
+        self.name, self.weight = line[0].split(&quot; &quot;)
+        self.weight = int(self.weight.strip()[1:-1])
+
+    @property
+    def total_weight(self):
+        self.total_weight = self.weight + sum(programs[c].total_weight for c in self.children)
+        return self.total_weight
+
+programs = {}
+
+with open(&quot;input.txt&quot;, &quot;r&quot;) as i:
+    for line in i:
+        program = Program(line.strip())
+        programs[program.name] = program
+
+# Set up parents
+for key, program in programs.items():
+    for child in program.children:
+        programs[child].parent = program
+
+program = programs.values()[0]
+while program.parent:
+    program = program.parent
+print program.name
+
+def find_incorrect_weight_parent(program):
+    child_weights = [programs[c].total_weight for c in program.children]
+    child_weights_counter = Counter(child_weights)
+    if len(child_weights_counter.keys()) &gt; 1:
+        lst = child_weights_counter.most_common(2)
+        weight_difference = lst[0][0] - lst[1][0]
+        for c in program.children:
+            if not programs[c].total_weight == lst[0][0]:
+                return programs[c].weight + weight_difference
+    return None
+
+lst = []
+queue = Queue.Queue()
+queue.put(program)
+
+while not queue.empty():
+    program = queue.get()
+    lst.append(program)
+    for c in program.children:
+        queue.put(programs[c])
+
+lst.reverse()
+
+for program in lst:
+    weight = find_incorrect_weight_parent(program)
+    if weight:
+        print weight
+        break
+</code></pre>
+
+<p>For the first part, I create a graph - loop through every program once to set up references to parents, and then just pick the first program and continue finding the parent until I find the root.</p>
+
+<p>For the second part, the only tricky bit is that we need to start searching from the bottom. For this I use a breadth first search to build a list of programs ordered from top to bottom. I then reverse the list, and loop through until I find the first one with the incorrect weight.</p>
+
+<p>Advent of Code runs every day up to Christmas, <a href="http://adventofcode.com">you should join in!</a>.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

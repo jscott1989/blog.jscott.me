@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Using Lifecycle Hooks to better understand your AWS environment - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Using Lifecycle Hooks to better understand your AWS environment" />
+<meta property="og:description" content="If you have a large number of EC2 instances running in an AWS environment, it can be difficult to really understand what is happening in production.
+In particular, when you use autoscaling groups, it can be difficult to notice when and why your instances are dying and requiring a restart. For the most part this isn&rsquo;t a problem, but in rare cases it&rsquo;s possible to run up large bills by restarting instances too frequently (for example if a system fails to start and so is constantly rebooted), and though usually you&rsquo;re perfectly happy for your machines to die and be automatically replaced, sometimes it can be useful to jump on to a dead machine to figure out what went wrong." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/using-lifecycle-hooks-to-better-understand-your-aws-environment/" />
+<meta property="article:published_time" content="2018-03-19T09:00:00+00:00" />
+<meta property="article:modified_time" content="2018-03-19T09:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Using Lifecycle Hooks to better understand your AWS environment"/>
+<meta name="twitter:description" content="If you have a large number of EC2 instances running in an AWS environment, it can be difficult to really understand what is happening in production.
+In particular, when you use autoscaling groups, it can be difficult to notice when and why your instances are dying and requiring a restart. For the most part this isn&rsquo;t a problem, but in rare cases it&rsquo;s possible to run up large bills by restarting instances too frequently (for example if a system fails to start and so is constantly rebooted), and though usually you&rsquo;re perfectly happy for your machines to die and be automatically replaced, sometimes it can be useful to jump on to a dead machine to figure out what went wrong."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Using Lifecycle Hooks to better understand your AWS environment</h1>
+			<div class="meta">Posted at &mdash; Mar 19, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<p>If you have a large number of EC2 instances running in an AWS environment, it can be difficult to really understand what is happening in production.</p>
+
+<p>In particular, when you use autoscaling groups, it can be difficult to notice when and why your instances are dying and requiring a restart. For the most part this isn&rsquo;t a problem, but in rare cases it&rsquo;s possible to run up large bills by restarting instances too frequently (for example if a system fails to start and so is constantly rebooted), and though usually you&rsquo;re perfectly happy for your machines to die and be automatically replaced, sometimes it can be useful to jump on to a dead machine to figure out what went wrong.</p>
+
+<p><img src="/content/images/2018/03/terminating.png" alt="terminating" /></p>
+
+<p>To help get a grip on this, you can use <a href="http://docs.aws.amazon.com/autoscaling/latest/userguide/lifecycle-hooks.html">Lifecycle Hooks</a> to alert you when an unhealthy instance needs to be restarted.</p>
+
+<p>Lifecycle hooks are designed to allow you to run custom code when an instance is started or stopped. For example to install custom software or configure network or security settings. We can use it to alert us when an unhealthy instance is terminated, and to allow us time to log into and debug the terminated instance.</p>
+
+<p>In this post I will explain how to use lifecycle hooks and lambda to alert you when your instances are unhealthy and allow you to debug. The examples I give will use CloudFormation, but you of course can create these resources manually using the AWS console, or use an alternative method such as Terraform.</p>
+
+<p>This only works if you have an autoscaling group which is performing health checks.</p>
+
+<p><strong>Create a topic</strong>
+First, we need to create a SNS topic where lifecycle events will be posted. We can then subscribe to this topic to act in response to instances which are being killed.</p>
+
+<pre><code class="language-language-json">&quot;UnhealthyHostReporterTopic&quot;: {
+    &quot;Properties&quot;: {
+        &quot;TopicName&quot;: &quot;unhealthy-hosts&quot;
+    },
+    &quot;Type&quot;: &quot;AWS::SNS::Topic&quot;
+}
+</code></pre>
+
+<p><strong>Set up the hook</strong></p>
+
+<p>Then, we set up a lifecycle hook on our autoscaling group to post to the  topic when an instance is terminating. We assume that you already have an autoscaling group with the key &ldquo;AutoScalingGroup&rdquo;.</p>
+
+<pre><code class="language-language-json">&quot;Parameters&quot;: {
+    &quot;LifecycleHeartbeatTimeout&quot;: {
+        &quot;Default&quot;: &quot;7200&quot;,
+        &quot;Description&quot;: &quot;How long in seconds before a terminated instance will be removed.&quot;,
+        &quot;Type&quot;: &quot;Number&quot;
+    },
+    &quot;LifecycleSNSTopicArn&quot;: {
+        &quot;Description&quot;: &quot;Topic ARN to send lifecycle transition messages&quot;,
+        &quot;Type&quot;: &quot;String&quot;
+    }
+}
+</code></pre>
+
+<pre><code class="language-language-json">&quot;LifecycleHook&quot;: {
+    &quot;Properties&quot;: {
+        &quot;AutoScalingGroupName&quot;: {
+            &quot;Ref&quot;: &quot;AutoScalingGroup&quot;
+        },
+        &quot;HeartbeatTimeout&quot;: {
+            &quot;Ref&quot;: &quot;LifecycleHeartbeatTimeout&quot;
+        },
+        
+        &quot;LifecycleTransition&quot;: &quot;autoscaling:EC2_INSTANCE_TERMINATING&quot;,
+        &quot;NotificationTargetARN&quot;: {
+            &quot;Ref&quot;: &quot;LifecycleSNSTopicArn&quot;
+        },
+        &quot;RoleARN&quot;: {
+            &quot;Fn::GetAtt&quot;: [
+                &quot;LifecycleHookRole&quot;,
+                &quot;Arn&quot;
+            ]
+        }
+    },
+    &quot;Type&quot;: &quot;AWS::AutoScaling::LifecycleHook&quot;
+}, &quot;LifecycleHookRole&quot;: {
+    &quot;Properties&quot;: {
+        &quot;AssumeRolePolicyDocument&quot;: {
+            &quot;Statement&quot;: [
+                {
+                    &quot;Action&quot;: [&quot;sts:AssumeRole&quot;],
+                    &quot;Effect&quot;: &quot;Allow&quot;,
+                    &quot;Principal&quot;: {
+                        &quot;Service&quot;: [&quot;autoscaling.amazonaws.com&quot;]
+                    }
+                }
+            ]
+        },
+        &quot;ManagedPolicyArns&quot;: [&quot;arn:aws:iam::aws:policy/service-role/AutoScalingNotificationAccessRole&quot;],
+        &quot;Path&quot;: &quot;/&quot;,
+        &quot;Policies&quot;: [
+            {
+                &quot;PolicyDocument&quot;: {
+                    &quot;Statement&quot;: [
+                        {
+                            &quot;Action&quot;: [&quot;sns:*&quot;],
+                            &quot;Effect&quot;: &quot;Allow&quot;,
+                            &quot;Resource&quot;: [&quot;*&quot;]
+                        }
+                    ]
+                },
+                &quot;PolicyName&quot;: &quot;LifecycleHookPolicy&quot;
+            }
+        ]
+    },
+    &quot;Type&quot;: &quot;AWS::IAM::Role&quot;
+}
+</code></pre>
+
+<p>With this set up, when your instances are shut down (for failing health checks or for other reasons) they will first be put into a wait state for the given amount of time, and will post a message to the topic containing:</p>
+
+<pre><code>    LifecycleActionToken — The lifecycle action token.
+    AccountId — The AWS account ID.
+    AutoScalingGroupName — The name of the Auto Scaling group.
+    LifecycleHookName — The name of the lifecycle hook.
+    EC2InstanceId — The ID of the EC2 instance.
+    LifecycleTransition — The lifecycle hook type.
+</code></pre>
+
+<p>You could stop here, set up an email subscription to that topic and be informed when your instances shut down. However, this will still put machines into a waiting state when they are being autoscaled-down, removing some of the advantages of autoscaling. To deal with this, we can create a simple Lambda which can decide if the instance should go into the wait state or shut down immediately.</p>
+
+<p><strong>Setting up a Lambda</strong></p>
+
+<p>Create a lambda with code something like the following:</p>
+
+<pre><code class="language-language-javascript">const AWS = require('aws-sdk');
+
+const HEALTHY_STATUS = 'Healthy';
+
+exports.handler = (notification, context) =&gt; {
+  const snsMessage = JSON.parse(notification.Records[0].Sns.Message);
+
+  const autoscaling = new AWS.AutoScaling();
+
+  autoscaling.describeAutoScalingGroups(
+    { AutoScalingGroupNames: [snsMessage.AutoScalingGroupName] }, (err, data) =&gt; {
+      if (err) {
+        // Error - report and don't kill it
+        context.fail(&quot;Error describing autoscaling groups&quot;);
+      } else {
+        const matchingInstances = data.AutoScalingGroups[0].Instances.filter(
+          i =&gt; i.InstanceId === snsMessage.EC2InstanceId);
+
+        if (matchingInstances.length === 0) {
+          // No instance found - report and don't kill it
+          context.fail(&quot;No instance found&quot;)
+        } else {
+          const instance = matchingInstances[0];
+          if (instance.HealthStatus === HEALTHY_STATUS) {
+            // Healthy - just tell the autoscaling to continue
+            const lifecycleParams = {
+              AutoScalingGroupName: snsMessage.AutoScalingGroupName,
+              LifecycleHookName: snsMessage.LifecycleHookName,
+              LifecycleActionToken: snsMessage.LifecycleActionToken,
+              LifecycleActionResult: 'CONTINUE',
+            };
+            autoscaling.completeLifecycleAction(lifecycleParams, (lifecycleErr) =&gt; {
+              if (lifecycleErr) {
+                console.error('AS lifecycle completion failed.\nDetails:\n', err);
+                console.debug('CompleteLifecycleAction\nParams:\n', lifecycleParams);
+                context.fail(&quot;As lifecycle completion failed&quot;)
+              } else {
+                context.succeed(&quot;Healthy instance shut down&quot;);
+              }
+            });
+          } else {
+            // Unhealthy - report and don't kill it
+            context.succeed(&quot;Unhealthy instance detected&quot;)
+          }
+        }
+      }
+    });
+};
+</code></pre>
+
+<p>We can now have this lambda execute in response to messages on the topic.</p>
+
+<pre><code class="language-language-json">&quot;UnhealthyHostReporterTopic&quot;: {
+    &quot;Properties&quot;: {
+        &quot;Subscription&quot;: [
+            {
+                &quot;Endpoint&quot;: {
+                    &quot;Fn::GetAtt&quot;: [
+                        &quot;UnhealthyHostReporter&quot;,
+                        &quot;Arn&quot;
+                    ]
+                },
+                &quot;Protocol&quot;: &quot;lambda&quot;
+            }
+        ],
+        &quot;TopicName&quot;: &quot;unhealthy-hosts&quot;
+    },
+    &quot;Type&quot;: &quot;AWS::SNS::Topic&quot;
+}
+</code></pre>
+
+<p>We also need to add permission for the lambda to be triggered by SNS.</p>
+
+<pre><code class="language-language-json">&quot;UnhealthyHostsTriggerPermission&quot;: {
+    &quot;Properties&quot;: {
+        &quot;Action&quot;: &quot;lambda:InvokeFunction&quot;,
+        &quot;FunctionName&quot;: {
+            &quot;Ref&quot;: &quot;UnhealthyHostReporter&quot;
+        },
+        &quot;Principal&quot;: &quot;sns.amazonaws.com&quot;
+    },
+    &quot;Type&quot;: &quot;AWS::Lambda::Permission&quot;
+}
+</code></pre>
+
+<p>Now, this lambda will be executed in response to all terminated EC2 instances. It will check to see if the instance is unhealthy, and if so will pause the shutdown. If it&rsquo;s healthy, and is just being terminated due to autoscaling or similar, it will be allowed to shut down immediately.</p>
+
+<p><strong>Notifying</strong></p>
+
+<p>The final part is to modify the lambda so it alerts you in an appropriate way when things are shutdown, and gives you the tools to shutdown a paused instance when you&rsquo;re done with it.</p>
+
+<p>In this example we have integrated with slack, but you could quite simply write code to post to internal tools, send emails, open jira tickets, or whatever you like.</p>
+
+<pre><code class="language-language-javascript">const AWS = require('aws-sdk');
+const https = require('https');
+const util = require('util');
+
+const HEALTHY_STATUS = 'Healthy';
+
+function sendToSlack(autoscaling_group_name, subject, text) {
+  return new Promise((resolve, fail) =&gt; {
+    const postData = {
+      channel: process.env.channel,
+      username: 'AWS Load Balancers',
+      text: `*${subject}*`,
+      attachments: [
+        {
+          author_name: autoscaling_group_name,
+          mrkdwn_in: ['text', 'fields'],
+          text,
+          author_icon: 'http://demo/icon.png',
+        },
+      ],
+    };
+
+    const options = {
+      method: 'POST',
+      hostname: 'hooks.slack.com',
+      port: 443,
+      path: process.env.webhook_path,
+    };
+
+    const req = https.request(options, (res) =&gt; {
+      res.setEncoding('utf8');
+      res.on('data', resolve);
+    });
+
+    req.on('error', e =&gt; fail(e.message));
+
+    req.write(util.format('%j', postData));
+    req.end();
+  });
+}
+
+exports.handler = (notification, context) =&gt; {
+  console.log(notification);
+  console.log(notification.Records[0].Sns.Message);
+  const snsMessage = JSON.parse(notification.Records[0].Sns.Message);
+
+  const info = `*AutoScalingGroupName:* ${snsMessage.AutoScalingGroupName}\n*Instance:* ${snsMessage.EC2InstanceId}\n*Time:* ${snsMessage.Time}\n*Terminate Command:* aws autoscaling complete-lifecycle-action --lifecycle-action-result CONTINUE --lifecycle-action-token ${snsMessage.LifecycleActionToken} --lifecycle-hook-name ${snsMessage.LifecycleHookName} --auto-scaling-group-name ${snsMessage.AutoScalingGroupName}`;
+
+  const autoscaling = new AWS.AutoScaling();
+
+  autoscaling.describeAutoScalingGroups(
+    { AutoScalingGroupNames: [snsMessage.AutoScalingGroupName] }, (err, data) =&gt; {
+      if (err) {
+        // Error - report and don't kill it
+        sendToSlack(snsMessage.AutoScalingGroupName, `Could not find autoscaling group: ${snsMessage.AutoScalingGroupName}`, `*${err}*\n\n\n${info}`).then(context.succeed);
+      } else {
+        const matchingInstances = data.AutoScalingGroups[0].Instances.filter(
+          i =&gt; i.InstanceId === snsMessage.EC2InstanceId);
+
+        if (matchingInstances.length === 0) {
+          // No instance found - report and don't kill it
+          sendToSlack(snsMessage.AutoScalingGroupName, `Could not find instance: ${snsMessage.EC2InstanceId}`, info).then(context.succeed);
+        } else {
+          const instance = matchingInstances[0];
+          if (instance.HealthStatus === HEALTHY_STATUS) {
+            // Healthy - just tell the autoscaling to continue
+            const lifecycleParams = {
+              AutoScalingGroupName: snsMessage.AutoScalingGroupName,
+              LifecycleHookName: snsMessage.LifecycleHookName,
+              LifecycleActionToken: snsMessage.LifecycleActionToken,
+              LifecycleActionResult: 'CONTINUE',
+            };
+            autoscaling.completeLifecycleAction(lifecycleParams, (lifecycleErr) =&gt; {
+              if (lifecycleErr) {
+                console.error('AS lifecycle completion failed.\nDetails:\n', err);
+                console.debug('CompleteLifecycleAction\nParams:\n', lifecycleParams);
+                sendToSlack(snsMessage.AutoScalingGroupName, 'Error terminating autoscaled instance', info).then(context.succeed);
+              } else {
+                context.succeed();
+              }
+            });
+          } else {
+            // Unhealthy - report to slack and don't kill it
+            sendToSlack(snsMessage.AutoScalingGroupName, 'TERMINATING UNHEALTHY INSTANCE', info).then(context.succeed);
+          }
+        }
+      }
+    });
+};
+</code></pre>
+
+<p>With this, you will now be informed when you have an unhealthy instance, and be provided with the tools to either debug it or let it be shut down.</p>
+
+<p>There&rsquo;s more that could be done here, perhaps ensuring that if you already have a machine in a wait state you shut down subsequent dead machines so you don&rsquo;t end up with 10s of machines in the WAIT state when you&rsquo;re dealing with the first one.</p>
+
+<p>The code is fairly simple so it&rsquo;s easy to expand on it from here.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+					<nav class="nav tags">
+							<ul class="flat">
+								
+								<li><a href="/tags/aws">AWS</a></li>
+								
+							</ul>
+					</nav>
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

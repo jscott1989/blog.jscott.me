@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Lombok: Towards beautiful Java code - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Lombok: Towards beautiful Java code" />
+<meta property="og:description" content="def gcd(x: Long, y: Long): Long = if (y == 0) x else gcd(y, x % y)  Can you tell me what this code does?
+data class User(val name: String, val age: Int)  What about this?
+The first is a Scala implementation of Euclid&rsquo;s algorithm for calculating the greatest common divisor. It says that if y is 0, the GCD of x and y is x, otherwise it&rsquo;s the GCD of y and x mod y." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/lombok-towards-beautiful-java-code/" />
+<meta property="article:published_time" content="2017-11-13T17:00:00+00:00" />
+<meta property="article:modified_time" content="2017-11-13T17:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Lombok: Towards beautiful Java code"/>
+<meta name="twitter:description" content="def gcd(x: Long, y: Long): Long = if (y == 0) x else gcd(y, x % y)  Can you tell me what this code does?
+data class User(val name: String, val age: Int)  What about this?
+The first is a Scala implementation of Euclid&rsquo;s algorithm for calculating the greatest common divisor. It says that if y is 0, the GCD of x and y is x, otherwise it&rsquo;s the GCD of y and x mod y."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Lombok: Towards beautiful Java code</h1>
+			<div class="meta">Posted at &mdash; Nov 13, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<pre><code class="language-language-scala">def gcd(x: Long, y: Long): Long =
+  if (y == 0) x else gcd(y, x % y)
+</code></pre>
+
+<p>Can you tell me what this code does?</p>
+
+<pre><code class="language-language-kotlin">data class User(val name: String, val age: Int)
+</code></pre>
+
+<p>What about this?</p>
+
+<p>The first is a Scala implementation of <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclid&rsquo;s algorithm</a> for calculating the greatest common divisor. It says that if <code>y</code> is 0, the GCD of <code>x</code> and <code>y</code> is <code>x</code>, otherwise it&rsquo;s the GCD of <code>y</code> and <code>x mod y</code>.</p>
+
+<p>The Scala code is essentially a direct translation of the algorithm, and even if you don&rsquo;t know Scala you can more or less figure it out if you know of Euclid&rsquo;s algorithm.</p>
+
+<p>The second is a <a href="https://kotlinlang.org/docs/reference/data-classes.html">data class</a> in Kotlin. This is a class whose main purpose is to hold data, in this case to hold a String value for name and a Int value for age.</p>
+
+<p>This is again pretty clear even if you know very little Kotlin. The classes behave as you&rsquo;d expect them to - you can print them out with a decent standard representation, compare instances for equality, and hash them in a reasonable way.</p>
+
+<p>Now. How about this?</p>
+
+<pre><code class="language-language-java">    public class User {
+	private final String name;
+	private final Integer age;
+
+	private User(String name, Integer age) {
+		this.name = name;
+		this.age = age;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	private static class Builder {
+		private String name;
+		private Integer age;
+
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Builder age(Integer age) {
+			this.age = age;
+			return this;
+		}
+
+		public User build() {
+			return new User(this.name, this.age);
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, age);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == 0) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		User user = (User) o;
+		return Objects.equals(name, user.name)
+			&amp;&amp; Objects.equals(age, user.age)
+	}
+
+	@Override
+	public String toString() {
+		return &quot;User{&quot; +
+			   &quot;name='&quot; + name + &quot;'&quot; +
+			   &quot;, age=&quot; + age.toString() +
+			   &quot;}&quot;;
+	}
+}
+</code></pre>
+
+<p>That&rsquo;s 66 lines of Java to create a <a href="https://en.wikipedia.org/wiki/Value_object">value object</a> which holds two variables. In functionality this isn&rsquo;t a million miles away from the Kotlin example earlier in this post (the major difference is the inclusion of a <a href="https://en.wikipedia.org/wiki/Builder_pattern">Builder</a>, which achieves similar functionality to Kotlin&rsquo;s <a href="https://kotlinlang.org/docs/reference/functions.html#named-arguments">named arguments</a>).</p>
+
+<p>In readability it&rsquo;s a million miles away from the Kotlin example. For just two instance variables we have this huge load of code that makes our job of understanding the class massively more difficult.</p>
+
+<p>Worse still, in 99% of cases - the code for the getters, builder, hashCode, equals, and toString are completely standard, so much so that many developers use their IDEs to generate them.</p>
+
+<hr />
+
+<p>The solution I&rsquo;d like to propose is the use of <a href="https://projectlombok.org/">Project Lombok</a>, an annotation-based code generation tool that has been around since 2009 and supports Java 6-8 (with support for 9 <a href="https://github.com/rzwitserloot/lombok/issues/985">coming soon</a>)</p>
+
+<p>It comes with a bunch of annotations that will generate boilerplate at compile-time - avoiding the need for it to sit around in your codebase.</p>
+
+<p><strong>ToString</strong></p>
+
+<pre><code class="language-language-java">@ToString
+public class User {
+</code></pre>
+
+<p>This generates a valid ToString method that is equivalent to the one we wrote manually.</p>
+
+<p><strong>Equals and Hashcode</strong></p>
+
+<pre><code class="language-language-java">@EqualsAndHashCode
+public class User {
+</code></pre>
+
+<p>This generates the equals and hashCode methods. By default this will include all instance variables in the class but arguments can specify variables to include/exclude.</p>
+
+<p><strong>Getters</strong></p>
+
+<p>We can generate getters for each individual field by adding the <code>@Getter</code> annotation.</p>
+
+<pre><code class="language-language-java">    @Getter
+    private final String name;
+    @Getter
+    private final Integer age;
+</code></pre>
+
+<p>Or create a getter for all instance variables by applying the <code>@Getter</code> annotation to the class directly.</p>
+
+<pre><code class="language-language-java">    @Getter
+    public class User {
+</code></pre>
+
+<p>You can of course disable the getter on individual instance variables, by applying the <code>@Getter(AccessLevel.NONE)</code> annotation.</p>
+
+<p>This leaves us with three annotations on the class, <code>@Getter</code>, <code>@EqualsAndHashCode</code>, and <code>@ToString</code>. We can simplify further by replacing these three with the single annotation <code>@Value</code>.</p>
+
+<pre><code class="language-language-java">    @Value
+    public class User {
+</code></pre>
+
+<p>With this single annotation we&rsquo;re generating valid and consistent equals, hashCode, and toString methods, and a getter for each instance variable.</p>
+
+<p><strong>Builder</strong></p>
+
+<p>Builders are a very common pattern in Java development. Not so useful in this case because there are only two variables but as your data or value objects grow they become invaluable to allow for optional constructor parameters.</p>
+
+<p>However they&rsquo;re very repetitive and suffer from the issues mentioned earlier in this post. Adding an instance variable means the variable also needs to be added to the builder, as does a setter, and it needs to be taken into account when the builder constructs the instance.</p>
+
+<p>Of course, the solution to this is the same as always.</p>
+
+<pre><code class="language-language-java">    @Builder
+    public class User {
+</code></pre>
+
+<p>Just add another annotation to the class. Our code is now a lot simpler than it was at the start.</p>
+
+<pre><code class="language-language-java">    @Builder
+    @Value
+    public class User {
+        private final String name;
+        private final Integer age;
+    }
+</code></pre>
+
+<p>These two annotations cut 60 lines in this tiny class. Across real codebases with much larger data and value objects it can cut thousands of lines.</p>
+
+<p>These cut lines are now code that doesn&rsquo;t need to be tested, or kept up to date, and it&rsquo;s very unlikely to introduce bugs as it&rsquo;s always generated the same. Most importantly we can now look at the class and see immediately what it does without having to parse huge amounts of boilerplate.</p>
+
+<p><strong>Other Annotations</strong></p>
+
+<p>There are of course other annotations in Lombok. In my opinion the most useful are <code>@Setter</code>, which generates setters, and <code>@Data</code> which is the mutable equivalent of <code>@Value</code>.</p>
+
+<p><code>NoArgsConstructor</code>, <code>RequiredArgsConstructor</code> and <code>AllArgsConstructor</code> come in handy on occasion for the same reasons I&rsquo;ve outlined: they avoid you writing, testing, maintaining, and reading needless boilerplate.</p>
+
+<p><code>@Log</code> can also be useful to remove that copy and pasted line at the top of most Java classes setting up logging.</p>
+
+<p>There are a number of other annotations that I believe are less useful or more experimental. You can see them all on the <a href="https://projectlombok.org/features/all">Lombok website</a>.</p>
+
+<p><strong>How it works</strong>
+Lombok uses <a href="https://jcp.org/en/jsr/detail?id=269">JSR 269</a>, which allows for pluggable annotation processors at compile-time. However, the JSR doesn&rsquo;t allow for modification of classes - only for generating new ones. So Lombok also used some <em>internal</em> APIs to achieve its goals.</p>
+
+<p>This is the bit most people don&rsquo;t like about Lombok. On the surface it can seem quite hacky, and maybe a bit fragile. I&rsquo;m sure there are a range of opinions on using internal APIs and I&rsquo;d be happy to discuss it with you.</p>
+
+<p>Lombok runs at compile time - which means the jar that is generated contains no evidence that Lombok was used. The generated methods behave exactly as if they were handwritten, and the Lombok library doesn&rsquo;t need to be included past compile time.</p>
+
+<p>It also doesn&rsquo;t use reflection for the generated methods. The generated code follows the normal patterns that your IDE does, or that you would when writing by hand.</p>
+
+<p><strong>Issues</strong></p>
+
+<p>The first issue to mention is that by default, your IDE won&rsquo;t be able to see the generated methods until you&rsquo;ve run the compiler that actually creates them, so it&rsquo;ll give you squiggly red lines when you try to use them.</p>
+
+<p>There are plugins for Eclipse and IntelliJ that allow the IDEs to see the generated methods before running the compiler, but if you use something else you&rsquo;re out of luck.</p>
+
+<p>Even with these plugins, it can still be difficult to refactor - if you want to change the name of an instance variable and the associated getter for example. The best way to deal with this is to manually write a getter - refactor that to the new name - and then remove the new getter allowing Lombok to take over. It&rsquo;s not the end of the world but it&rsquo;s not ideal.</p>
+
+<p>Also, because the methods don&rsquo;t exist in source - this may cause issues for any static analysis you run against your source. This can be solved, through the use of the <code>delombok</code> tool, which I&rsquo;ll talk about later in this post, but it is something to be aware of.</p>
+
+<p>And finally, because of the use of internal APIs, Jigsaw in Java 9 will just block Lombok from working by default. I last saw an update on the Lombok project a few months ago where they were making good progress with Java 9 compatibility, but of course until it&rsquo;s working completely we can&rsquo;t say for certain.</p>
+
+<p><strong>Delombok</strong></p>
+
+<p>Delombok is a command which will generate the Java code for the builders, getters, setters, etc. directly inside the Java source file.</p>
+
+<p>This can be used to generate the code before you run static analysis, and it&rsquo;s also the security in case Lombok is no longer viable at some point. One command will regenerate all of that code that was deleted.</p>
+
+<p><strong>Alternatives</strong></p>
+
+<p><em>IDE Generation</em></p>
+
+<p>The most obvious alternative solution is let your IDE do it. This is what most of us are doing already. Most IDEs have getters and setters, hashCode, equals, and toString built in - and you can get plugins to generate builders.</p>
+
+<p>However, as I&rsquo;ve mentioned previously, it makes the code harder to figure out due to all the boilerplate, and it&rsquo;s easy to forget to re-generate something after a change.</p>
+
+<p><em>AutoValue/Immutables</em></p>
+
+<p><a href="https://github.com/google/auto/blob/master/value/userguide/index.md">AutoValue</a> and <a href="https://immutables.github.io/">Immutables</a> are two very similar projects, specifically for reducing the boilerplate around value objects.</p>
+
+<p>They both use JSR 269 without the use of internal APIs, which means we can be a bit more confident that they won&rsquo;t stop working with a future version of the JDK. But I personally found the code that you need to write to use these projects a lot less pleasing than that which you write when using Lombok.</p>
+
+<p>You create abstract classes or interfaces that define the getters, then the library generates a class implementing that interface, complete with builders etc. However you then end up with these weird class names like AutoValue_Animal, which I wouldn&rsquo;t say I like less than getters, but I&rsquo;m not a huge fan of.</p>
+
+<hr />
+
+<p>There are other solutions such as moving to another language, or just learning to love the boilerplate. But within the projects I work on we&rsquo;ve adopted Lombok and are very happy with the subsequent improvement in the readability of our code. I&rsquo;m interested in hearing other people&rsquo;s experiences using Lombok or other techniques to deal with Java boilerplate.</p>
+
+<p><em>This post was originally delivered as an internal technical talk on 19/10/2017.</em></p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+					<nav class="nav tags">
+							<ul class="flat">
+								
+								<li><a href="/tags/java">Java</a></li>
+								
+								<li><a href="/tags/lombok">Lombok</a></li>
+								
+							</ul>
+					</nav>
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

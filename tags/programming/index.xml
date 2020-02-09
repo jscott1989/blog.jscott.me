@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>programming on JScott.me</title>
+    <link>https://blog.jscott.me/tags/programming/</link>
+    <description>Recent content in programming on JScott.me</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Sat, 28 Apr 2018 15:23:45 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.jscott.me/tags/programming/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>dotTest</title>
+      <link>https://blog.jscott.me/post/dottest/</link>
+      <pubDate>Sat, 28 Apr 2018 15:23:45 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/dottest/</guid>
+      <description>The name test is reserved by the Internet Engineering Task Force (IETF) in RFC 2606 (June 1999) as a domain name that is not intended to be installed as a top-level domain (TLD) in the global Domain Name System (DNS) of the Internet for production use.
+ dotTest is a small script which allows you to configure local .test domains to point to different ports on your machine. For example, if you&amp;rsquo;re developing some software which consists of a frontend service (running on port 8000) and a backend service (running on port 8080), it can be more clear to use http://frontend.</description>
+    </item>
+    
+    <item>
+      <title>Spring Wiring</title>
+      <link>https://blog.jscott.me/post/spring-wiring/</link>
+      <pubDate>Wed, 29 Nov 2017 16:24:59 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/spring-wiring/</guid>
+      <description>Spring is a large framework with a lot of moving parts. In this post and a few follow up posts, I&amp;rsquo;m going to cover some of the major components of Spring and explain how they fit together.
+Right now I&amp;rsquo;m just going to overview the ways that Spring allows for dependency injection. Later posts will cover other features of Spring.
+Spring
+Spring is an open source application framework for writing Java applications.</description>
+    </item>
+    
+  </channel>
+</rss>

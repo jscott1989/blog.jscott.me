@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code 2018: Day 4 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code 2018: Day 4" />
+<meta property="og:description" content="Wow, taking the effort to make a reasonable API for these one off scripts really takes it out of you, I kind of give up half way today. I think today will be the last where I actually consider the readability and reusability of my answers.
+From tomorrow I&rsquo;ll be moving to Kotlin to make data objects easier to make and I&rsquo;ll stop worrying about ensuring my objects are immutable etc." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-2018-day-4/" />
+<meta property="article:published_time" content="2018-12-09T12:19:44+00:00" />
+<meta property="article:modified_time" content="2018-12-09T12:19:44+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code 2018: Day 4"/>
+<meta name="twitter:description" content="Wow, taking the effort to make a reasonable API for these one off scripts really takes it out of you, I kind of give up half way today. I think today will be the last where I actually consider the readability and reusability of my answers.
+From tomorrow I&rsquo;ll be moving to Kotlin to make data objects easier to make and I&rsquo;ll stop worrying about ensuring my objects are immutable etc."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code 2018: Day 4</h1>
+			<div class="meta">Posted at &mdash; Dec 9, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<p>Wow, taking the effort to make a reasonable API for these one off scripts really takes it out of you, I kind of give up half way today. I think today will be the last where I actually consider the readability and reusability of my answers.</p>
+
+<p>From tomorrow I&rsquo;ll be moving to Kotlin to make data objects easier to make and I&rsquo;ll stop worrying about ensuring my objects are immutable etc.</p>
+
+<p>In today&rsquo;s task we&rsquo;re given a list of log entries of the form:</p>
+
+<blockquote>
+<p>[1518-11-01 00:00] Guard #10 begins shift
+[1518-11-01 00:05] falls asleep
+[1518-11-01 00:25] wakes up
+[1518-11-01 00:30] falls asleep
+[1518-11-01 00:55] wakes up
+[1518-11-01 23:58] Guard #99 begins shift
+[1518-11-02 00:40] falls asleep
+[1518-11-02 00:50] wakes up
+[1518-11-03 00:05] Guard #10 begins shift
+[1518-11-03 00:24] falls asleep
+[1518-11-03 00:29] wakes up
+[1518-11-04 00:02] Guard #99 begins shift
+[1518-11-04 00:36] falls asleep
+[1518-11-04 00:46] wakes up
+[1518-11-05 00:03] Guard #99 begins shift
+[1518-11-05 00:45] falls asleep
+[1518-11-05 00:55] wakes up</p>
+</blockquote>
+
+<p><strong>Part 1</strong></p>
+
+<p>For part 1 we need to first find the guard who spends the most time asleep, and then find the minute that they&rsquo;re most likely to be asleep.</p>
+
+<p><strong>Part 2</strong></p>
+
+<p>For part 2 we need to find which guard is most frequently asleep at the same minute, and find which minute that is.</p>
+
+<pre><code class="language-language-java">import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
+
+abstract class LogEntry {
+    protected final LocalDateTime dateTime;
+    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm&quot;);
+
+    LocalDateTime dateTime() {
+        return dateTime;
+    }
+
+    protected LogEntry(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    static LogEntry fromString(String logString) {
+        Matcher matcher;
+
+        matcher = BeginLogEntry.pattern.matcher(logString);
+        if (matcher.matches()) {
+            return new BeginLogEntry(matcher);
+        }
+
+        matcher = FallAsleepLogEntry.pattern.matcher(logString);
+        if (matcher.matches()) {
+            return new FallAsleepLogEntry(matcher);
+        }
+
+        matcher = WakeUpLogEntry.pattern.matcher(logString);
+        if (matcher.matches()) {
+            return new WakeUpLogEntry(matcher);
+        }
+
+        throw new IllegalArgumentException(String.format(&quot;LogString is not valid: %s&quot;, logString));
+    }
+}
+
+
+class BeginLogEntry extends LogEntry {
+    protected static final Pattern pattern = Pattern.compile(&quot;\\[(.+)\\] Guard #(\\d+) begins shift&quot;);
+
+    private final int guardId;
+
+    BeginLogEntry(Matcher matcher) {
+        super(LocalDateTime.parse(matcher.group(1), dateTimeFormatter));
+        this.guardId = Integer.parseInt(matcher.group(2));
+    }
+
+    int guardId() {
+        return guardId;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(&quot;[%s] Guard #%d begins shift&quot;, dateTime.format(dateTimeFormatter), guardId);
+    }
+}
+
+class FallAsleepLogEntry extends LogEntry {
+    protected static final Pattern pattern = Pattern.compile(&quot;\\[(.+)\\] falls asleep&quot;);
+
+    FallAsleepLogEntry(Matcher matcher) {
+        super(LocalDateTime.parse(matcher.group(1), dateTimeFormatter));
+    }
+
+    @Override
+    public String toString() {
+        return String.format(&quot;[%s] falls asleep&quot;, dateTime.format(dateTimeFormatter));
+    }
+}
+
+class WakeUpLogEntry extends LogEntry {
+    protected static final Pattern pattern = Pattern.compile(&quot;\\[(.+)\\] wakes up&quot;);
+
+    WakeUpLogEntry(Matcher matcher) {
+        super(LocalDateTime.parse(matcher.group(1), dateTimeFormatter));
+    }
+
+    @Override
+    public String toString() {
+        return String.format(&quot;[%s] wakes up&quot;, dateTime.format(dateTimeFormatter));
+    }
+}
+
+class Shift {
+    private int guardId;
+    private LocalDateTime start;
+    private Collection&lt;Period&gt; naps;
+
+    private Shift(int guardId, LocalDateTime start, Collection&lt;Period&gt; naps) {
+        this.guardId = guardId;
+        this.start = start;
+        this.naps = new ArrayList&lt;&gt;(naps);
+    }
+
+    int guardId() {
+        return guardId;
+    }
+
+    LocalDateTime start() {
+        return start;
+    }
+
+    Collection&lt;Period&gt; naps() {
+        return Collections.unmodifiableCollection(naps);
+    }
+
+    int calculateTotalMinutesSleeping() {
+        return naps.stream()
+                .mapToInt(p -&gt; (int) p.start().until(p.end(), ChronoUnit.MINUTES))
+                .sum();
+    }
+
+    @Override
+    public String toString() {
+        return String.format(&quot;[%s] #%d %d naps, %d total minutes sleeping&quot;,
+                start, guardId, naps.size(), calculateTotalMinutesSleeping());
+    }
+
+    static Builder builder() {
+        return new Builder();
+    }
+
+    static class Builder {
+        private int guardId;
+        private LocalDateTime start;
+        private Collection&lt;Period&gt; naps = new ArrayList&lt;&gt;();
+
+        Builder guardId(int guardId) {
+            this.guardId = guardId;
+            return this;
+        }
+
+        Builder start(LocalDateTime start) {
+            this.start = start;
+            return this;
+        }
+
+        Builder addNap(Period period) {
+            naps.add(period);
+            return this;
+        }
+
+        Shift build() {
+            return new Shift(guardId, start, naps);
+        }
+    }
+}
+
+class Period {
+    private final LocalDateTime start;
+    private final LocalDateTime end;
+
+    Period(LocalDateTime start, LocalDateTime end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    static Builder builder() {
+        return new Builder();
+    }
+
+    LocalDateTime start() {
+        return start;
+    }
+
+    LocalDateTime end() {
+        return end;
+    }
+
+    static class Builder {
+        private LocalDateTime start;
+        private LocalDateTime end;
+
+        Builder start(LocalDateTime start) {
+            this.start = start;
+            return this;
+        }
+
+        Builder end(LocalDateTime end) {
+            this.end = end;
+            return this;
+        }
+
+        Period build() {
+            return new Period(start, end);
+        }
+    }
+}
+
+public class GuardTracker {
+    private static class MostOftenSlept {
+        private final int minute;
+        private final int count;
+
+        MostOftenSlept(int minute, int count) {
+            this.minute = minute;
+            this.count = count;
+        }
+
+        int minute() {
+            return minute;
+        }
+
+        int count() {
+            return count;
+        }
+    }
+
+    public static void main(String[] args) {
+        if (args.length &lt; 1) {
+            System.err.println(&quot;Error: First argument must be log string&quot;);
+            System.exit(1);
+        }
+
+        String logString = args[0];
+
+        List&lt;LogEntry&gt; log = parseLogString(logString);
+        List&lt;Shift&gt; shifts = logToShifts(log);
+        Map&lt;Integer, List&lt;Shift&gt;&gt; guardShifts = groupShiftsByGuardId(shifts);
+
+        // Part 1
+        int mostSleepGuardId = findMostSleepingGuardId(guardShifts);
+        int minuteMostOftenSlept = calculateMinuteMostOftenSlept(guardShifts.get(mostSleepGuardId)).minute();
+
+        System.out.println(String.format(&quot;Part 1: %d&quot;, mostSleepGuardId * minuteMostOftenSlept));
+
+        // Part 2
+        Map&lt;Integer, MostOftenSlept&gt; guardMostOftenSlept = calculateGuardMostOftenSlept(guardShifts);
+        Map.Entry&lt;Integer, MostOftenSlept&gt; part2 = guardMostOftenSlept.entrySet().stream()
+                .max(Comparator.comparingInt(a -&gt; a.getValue().count()))
+                .get();
+
+        System.out.println(String.format(&quot;Part 2: %d&quot;, part2.getKey() * part2.getValue().minute()));
+    }
+
+    private static List&lt;LogEntry&gt; parseLogString(String logString) {
+        return Arrays.stream(logString.split(&quot;\n&quot;)).map(LogEntry::fromString).collect(Collectors.toList());
+    }
+
+    private static Map&lt;Integer, List&lt;Shift&gt;&gt; groupShiftsByGuardId(List&lt;Shift&gt; shifts) {
+        return shifts.stream()
+                .collect(Collectors.groupingBy(Shift::guardId));
+    }
+
+    private static int findMostSleepingGuardId(Map&lt;Integer, List&lt;Shift&gt;&gt; guardShifts) {
+        int mostSleepGuardId = 0;
+        int mostSleepAmount = 0;
+
+        for (int guardId : guardShifts.keySet()) {
+            int sleepAmount = calculateTotalSleepAmount(guardShifts.get(guardId));
+            if (sleepAmount &gt; mostSleepAmount) {
+                mostSleepAmount = sleepAmount;
+                mostSleepGuardId = guardId;
+            }
+        }
+
+        return mostSleepGuardId;
+    }
+
+    private static Map&lt;Integer, MostOftenSlept&gt; calculateGuardMostOftenSlept(Map&lt;Integer, List&lt;Shift&gt;&gt; guardShifts) {
+        return guardShifts.entrySet().stream()
+                .collect(toMap(Map.Entry::getKey, e -&gt; calculateMinuteMostOftenSlept(e.getValue())));
+    }
+
+    private static MostOftenSlept calculateMinuteMostOftenSlept(Collection&lt;Shift&gt; shifts) {
+        Map&lt;Integer, Integer&gt; sleepCountByMinute = new HashMap&lt;&gt;();
+        for (Shift shift: shifts) {
+            for (Period nap : shift.naps()) {
+                for (int minute = nap.start().getMinute(); minute &lt; nap.end().getMinute(); minute++) {
+                    sleepCountByMinute.put(minute, sleepCountByMinute.getOrDefault(minute, 0) + 1);
+                }
+            }
+        }
+
+        if (sleepCountByMinute.isEmpty()) {
+            return new MostOftenSlept(0, 0);
+        }
+
+        Map.Entry&lt;Integer, Integer&gt; count = sleepCountByMinute.entrySet().stream()
+                .max(Comparator.comparing(Map.Entry::getValue))
+                .get();
+
+        return new MostOftenSlept(count.getKey(), count.getValue());
+    }
+
+    private static int calculateTotalSleepAmount(Collection&lt;Shift&gt; shifts) {
+        return shifts.stream().mapToInt(Shift::calculateTotalMinutesSleeping).sum();
+    }
+
+    private static List&lt;Shift&gt; logToShifts(List&lt;LogEntry&gt; log) {
+        List&lt;LogEntry&gt; logCopy = new ArrayList&lt;&gt;(log);
+        logCopy.sort(Comparator.comparing(LogEntry::dateTime));
+        List&lt;Shift&gt; shifts = new ArrayList&lt;&gt;();
+
+        int index = 0;
+
+        Shift.Builder shiftBuilder = null;
+        Period.Builder napBuilder = null;
+
+        while (index &lt; logCopy.size()) {
+            LogEntry logEntry = logCopy.get(index);
+            if (logEntry instanceof BeginLogEntry) {
+                if (shiftBuilder != null) {
+                    shifts.add(shiftBuilder.build());
+                }
+
+                BeginLogEntry beginLogEntry = (BeginLogEntry) logEntry;
+                shiftBuilder = Shift.builder();
+                shiftBuilder.guardId(beginLogEntry.guardId());
+                shiftBuilder.start(beginLogEntry.dateTime());
+            } else if (logEntry instanceof FallAsleepLogEntry) {
+                napBuilder = Period.builder();
+                napBuilder.start(logEntry.dateTime());
+            } else if (logEntry instanceof WakeUpLogEntry) {
+                napBuilder.end(logEntry.dateTime());
+                shiftBuilder.addNap(napBuilder.build());
+            }
+
+            index++;
+        }
+
+        if (shiftBuilder != null) {
+            shifts.add(shiftBuilder.build());
+        }
+
+        return shifts;
+    }
+}
+
+</code></pre>
+
+<p><a href="http://adventofcode.com/">Advent Of Code runs until December 25. You should get involved!</a></p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on JScott.me</title>
+    <link>https://blog.jscott.me/categories/python/</link>
+    <description>Recent content in Python on JScott.me</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Sat, 28 Apr 2018 15:23:45 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.jscott.me/categories/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>dotTest</title>
+      <link>https://blog.jscott.me/post/dottest/</link>
+      <pubDate>Sat, 28 Apr 2018 15:23:45 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/dottest/</guid>
+      <description>The name test is reserved by the Internet Engineering Task Force (IETF) in RFC 2606 (June 1999) as a domain name that is not intended to be installed as a top-level domain (TLD) in the global Domain Name System (DNS) of the Internet for production use.
+ dotTest is a small script which allows you to configure local .test domains to point to different ports on your machine. For example, if you&amp;rsquo;re developing some software which consists of a frontend service (running on port 8000) and a backend service (running on port 8080), it can be more clear to use http://frontend.</description>
+    </item>
+    
+  </channel>
+</rss>

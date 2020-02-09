@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code: Day 22 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code: Day 22" />
+<meta property="og:description" content="For Day 22, the challenge is to follow some rules to spread a virus through an infinite grid.
+import copy marked = {} UP = (0, -1) DOWN = (0, 1) LEFT = (-1, 0) RIGHT = (1, 0) CLEAN = 0 WEAKENED = 1 INFECTED = 2 FLAGGED = 3 def turn(current, turn_direction): if current == UP: return turn_direction elif current == DOWN and turn_direction == LEFT: return RIGHT elif current == DOWN: return LEFT elif current == LEFT and turn_direction == LEFT: return DOWN elif current == LEFT: return UP elif turn_direction == LEFT: return UP return DOWN with open(&quot;input." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-day-22/" />
+<meta property="article:published_time" content="2017-12-24T19:29:08+00:00" />
+<meta property="article:modified_time" content="2017-12-24T19:29:08+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code: Day 22"/>
+<meta name="twitter:description" content="For Day 22, the challenge is to follow some rules to spread a virus through an infinite grid.
+import copy marked = {} UP = (0, -1) DOWN = (0, 1) LEFT = (-1, 0) RIGHT = (1, 0) CLEAN = 0 WEAKENED = 1 INFECTED = 2 FLAGGED = 3 def turn(current, turn_direction): if current == UP: return turn_direction elif current == DOWN and turn_direction == LEFT: return RIGHT elif current == DOWN: return LEFT elif current == LEFT and turn_direction == LEFT: return DOWN elif current == LEFT: return UP elif turn_direction == LEFT: return UP return DOWN with open(&quot;input."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code: Day 22</h1>
+			<div class="meta">Posted at &mdash; Dec 24, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<p>For <a href="http://adventofcode.com/2017/day/22">Day 22</a>, the challenge is to follow some rules to spread a virus through an infinite grid.</p>
+
+<pre><code class="language-language-python">import copy
+marked = {}
+
+UP = (0, -1)
+DOWN = (0, 1)
+LEFT = (-1, 0)
+RIGHT = (1, 0)
+
+CLEAN = 0
+WEAKENED = 1
+INFECTED = 2
+FLAGGED = 3
+
+def turn(current, turn_direction):
+    if current == UP:
+        return turn_direction
+    elif current == DOWN and turn_direction == LEFT:
+        return RIGHT
+    elif current == DOWN:
+        return LEFT
+    elif current == LEFT and turn_direction == LEFT:
+        return DOWN
+    elif current == LEFT:
+        return UP
+    elif turn_direction == LEFT:
+        return UP
+    return DOWN
+
+
+with open(&quot;input.txt&quot;, &quot;r&quot;) as o:
+    lines = [l.strip() for l in o]
+    for y in range(len(lines)):
+        for x in range(len(lines[0])):
+            if lines[y][x] == &quot;#&quot;:
+                marked[(x, y)] = INFECTED
+
+    x = len(lines[0]) / 2
+    y = len(lines) / 2
+
+def part1_rules(direction, marked, x, y):
+    direction = turn(direction, RIGHT if marked.get((x, y)) == INFECTED else LEFT)
+
+    state = marked.get((x, y), CLEAN)
+    if state == INFECTED:
+        state = CLEAN
+    else:
+        state = INFECTED
+
+    marked[(x, y)] = state
+
+    return direction
+
+def part2_rules(direction, marked, x, y):
+    state = marked.get((x, y), CLEAN)
+
+    if state == CLEAN:
+        direction = turn(direction, LEFT)
+        state = WEAKENED
+    elif state == WEAKENED:
+        state = INFECTED
+    elif state == INFECTED:
+        direction = turn(direction, RIGHT)
+        state = FLAGGED
+    else:
+        direction = turn(turn(direction, LEFT), LEFT)
+        state = CLEAN
+
+    marked[(x, y)] = state
+
+    return direction
+
+def run(iterations, marked, x, y, rules=part1_rules):
+    marked = copy.deepcopy(marked)
+    direction = UP
+    caused_infection_count = 0
+    for i in range(iterations):
+        direction = rules(direction, marked, x, y)
+        if marked[(x, y)] == INFECTED:
+            caused_infection_count += 1
+        x += direction[0]
+        y += direction[1]
+    return caused_infection_count
+
+print &quot;Part 1&quot;, run(10000, marked, x, y)
+print &quot;Part 2&quot;, run(10000000, marked, x, y, part2_rules)
+</code></pre>
+
+<p>Advent of Code runs every day up to Christmas, <a href="http://adventofcode.com">you should join in!</a>.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

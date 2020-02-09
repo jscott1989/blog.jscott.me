@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code: Day 15 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code: Day 15" />
+<meta property="og:description" content="For Day 15, the challenge is to create some generators which follow particular rules for generating sequences, and then count the number of times the results match. My Python solution is below:
+with open(&quot;input.txt&quot;, &quot;r&quot;) as o: seed1 = int(o.readline().rsplit(&quot; &quot;, 1)[1]) seed2 = int(o.readline().rsplit(&quot; &quot;, 1)[1]) FACTOR_A = 16807 FACTOR_B = 48271 DIVISION = 2147483647 def generator(previous, factor, multiples=1): while True: previous = (previous * factor) % DIVISION if previous % multiples == 0: yield previous part1_generator1 = generator(seed1, FACTOR_A) part1_generator2 = generator(seed2, FACTOR_B) part2_generator1 = generator(seed1, FACTOR_A, 4) part2_generator2 = generator(seed2, FACTOR_B, 8) def count(generator1, generator2, n): return len([1 for _ in range(n) if generator1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-day-15/" />
+<meta property="article:published_time" content="2017-12-15T20:31:24+00:00" />
+<meta property="article:modified_time" content="2017-12-15T20:31:24+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code: Day 15"/>
+<meta name="twitter:description" content="For Day 15, the challenge is to create some generators which follow particular rules for generating sequences, and then count the number of times the results match. My Python solution is below:
+with open(&quot;input.txt&quot;, &quot;r&quot;) as o: seed1 = int(o.readline().rsplit(&quot; &quot;, 1)[1]) seed2 = int(o.readline().rsplit(&quot; &quot;, 1)[1]) FACTOR_A = 16807 FACTOR_B = 48271 DIVISION = 2147483647 def generator(previous, factor, multiples=1): while True: previous = (previous * factor) % DIVISION if previous % multiples == 0: yield previous part1_generator1 = generator(seed1, FACTOR_A) part1_generator2 = generator(seed2, FACTOR_B) part2_generator1 = generator(seed1, FACTOR_A, 4) part2_generator2 = generator(seed2, FACTOR_B, 8) def count(generator1, generator2, n): return len([1 for _ in range(n) if generator1."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code: Day 15</h1>
+			<div class="meta">Posted at &mdash; Dec 15, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<p>For <a href="http://adventofcode.com/2017/day/15">Day 15</a>, the challenge is to create some generators which follow particular rules for generating sequences, and then count the number of times the results match. My Python solution is below:</p>
+
+<pre><code class="language-language-python">with open(&quot;input.txt&quot;, &quot;r&quot;) as o:
+    seed1 = int(o.readline().rsplit(&quot; &quot;, 1)[1])
+    seed2 = int(o.readline().rsplit(&quot; &quot;, 1)[1])
+
+FACTOR_A = 16807
+FACTOR_B = 48271
+
+DIVISION = 2147483647
+
+def generator(previous, factor, multiples=1):
+    while True:
+        previous = (previous * factor) % DIVISION
+        if previous % multiples == 0:
+            yield previous
+
+part1_generator1 = generator(seed1, FACTOR_A)
+part1_generator2 = generator(seed2, FACTOR_B)
+
+part2_generator1 = generator(seed1, FACTOR_A, 4)
+part2_generator2 = generator(seed2, FACTOR_B, 8)
+
+def count(generator1, generator2, n):
+    return len([1 for _ in range(n) if generator1.next() &amp; 0xffff == generator2.next() &amp; 0xffff])
+
+print &quot;Part 1&quot;, count(part1_generator1, part1_generator2, 40000000)
+print &quot;Part 2&quot;, count(part2_generator1, part2_generator2, 5000000)
+</code></pre>
+
+<p>This uses Python generators which makes the solution pretty clean and easy to understand.</p>
+
+<p>Advent of Code runs every day up to Christmas, <a href="http://adventofcode.com">you should join in!</a>.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

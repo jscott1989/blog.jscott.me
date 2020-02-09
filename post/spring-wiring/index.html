@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Spring Wiring - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Spring Wiring" />
+<meta property="og:description" content="Spring is a large framework with a lot of moving parts. In this post and a few follow up posts, I&rsquo;m going to cover some of the major components of Spring and explain how they fit together.
+Right now I&rsquo;m just going to overview the ways that Spring allows for dependency injection. Later posts will cover other features of Spring.
+Spring
+Spring is an open source application framework for writing Java applications." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/spring-wiring/" />
+<meta property="article:published_time" content="2017-11-29T16:24:59+00:00" />
+<meta property="article:modified_time" content="2017-11-29T16:24:59+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring Wiring"/>
+<meta name="twitter:description" content="Spring is a large framework with a lot of moving parts. In this post and a few follow up posts, I&rsquo;m going to cover some of the major components of Spring and explain how they fit together.
+Right now I&rsquo;m just going to overview the ways that Spring allows for dependency injection. Later posts will cover other features of Spring.
+Spring
+Spring is an open source application framework for writing Java applications."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Spring Wiring</h1>
+			<div class="meta">Posted at &mdash; Nov 29, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<p>Spring is a large framework with a lot of moving parts. In this post and a few follow up posts, I&rsquo;m going to cover some of the major components of Spring and explain how they fit together.</p>
+
+<p>Right now I&rsquo;m just going to overview the ways that Spring allows for dependency injection. Later posts will cover other features of Spring.</p>
+
+<p><strong>Spring</strong></p>
+
+<p>Spring is an open source application framework for writing Java applications. At it&rsquo;s core, Spring allows for inversion of control (through dependency injection) and aspect oriented programming. It isn&rsquo;t only a framework for web applications, though it often gets used for web applications and has a number of extensions to support that.</p>
+
+<p><strong>Spring XML</strong></p>
+
+<p>Spring&rsquo;s XML configuration options are a pretty famous, or infamous, part of Spring&rsquo;s history.</p>
+
+<p>I&rsquo;ve come to use Spring quite recently so I&rsquo;ve never had cause to use XML configuration, preferring Java-based configuration instead. I also don&rsquo;t have any intention of starting to use XML configuration. In this post I will focus on implicit wiring and Java-based configuration, though everything demonstrated can also be achieved with XML configuration if that&rsquo;s your preference.</p>
+
+<p><strong>Beans</strong></p>
+
+<p>Bean is an interesting word because it has a number of meanings in Java applications. For the purposes of most people using Spring, beans are just objects which are managed for us by Spring.</p>
+
+<p>When Spring is managing a bean, it goes through the following stages:</p>
+
+<ul>
+<li>Instantiate</li>
+<li>populate properties (value and bean references)</li>
+<li><em>BeanNameAware</em>&rsquo;s setBeanName()</li>
+<li><em>BeanFactoryAware</em>&rsquo;s setBeanFactory()</li>
+<li><em>ApplicationContextAware</em>&rsquo;s setApplicationContext()</li>
+<li>Pre-Initialization BeanPostProcessors</li>
+<li><em>InitializingBean</em>&rsquo;s afterPropertiesSet()</li>
+<li>Call custom init-method</li>
+<li>Post-Initialization BeanPostProcessors</li>
+<li><em>DisposableBean</em>&rsquo;s destroy</li>
+<li>Call custom destroy method</li>
+</ul>
+
+<p>The words in italics indicate interfaces which your beans can implement to have the callbacks invoked at the appropriate time.</p>
+
+<p><strong>Dependency Injection</strong></p>
+
+<p>Dependency injection frees objects from needing to manage their dependencies. When using dependency injection, objects only need to specify the interface of their dependencies, and allow <em>something else</em> to provide the correct dependencies.</p>
+
+<p>This makes reuse much easier, as objects are now much more loosely coupled, and has big advantages for unit testing as it&rsquo;s much easier to mock out dependencies.</p>
+
+<p>For example, without Dependency Injection:</p>
+
+<pre><code class="language-language-java">public class TaskExecutor {
+    private ConfigStore configStore = new S3ConfigStore();
+
+    public TaskExecutor() {
+    }
+}
+</code></pre>
+
+<p>If your class needs access to some configuration object, you could do it as shown. In here we’re creating a TaskExecutor which creates a S3ConfigStore. You could imagine this config store allowing us to fetch content from S3.</p>
+
+<p>But really, there&rsquo;s no reason for this class to know that the configuration is coming from S3. That&rsquo;s an implementation detail. As long as it can get a ConfigStore it doesn&rsquo;t really matter where the config comes from.</p>
+
+<p>with Dependency Injection:</p>
+
+<pre><code class="language-language-java">public class TaskExecutor {
+    private ConfigStore configStore;
+
+    public TaskExecutor(ConfigStore configStore) {
+        this.configStore = configStore;
+    }
+}
+</code></pre>
+
+<p>If we instead wrote the class like this, the ConfigStore can be injected into the TaskExecutor. The major advantage to this is that it means we can swap in an alternative ConfigStore without changing the TaskExecutor.</p>
+
+<p>In particular, this is useful if we want to test the TaskExecutor, as we can swap in a local config store, or a mocked config store, or whatever we need to make the test run. This way we’re not reliant on whatever ConfigStore the TaskExecutor has been hard-coded to use.</p>
+
+<p>However, with this model we do have an issue - where does the ConfigStore come from? We could have it so that every time we create a TaskExecutor we also create a ConfigStore and inject it. That can work, but it doesn’t scale very well.</p>
+
+<p><strong>Spring Containers</strong>
+The solution to this in Spring is containers.</p>
+
+<p>All of the magic Spring provides for you comes from containers. These control the creation, configuration, and destruction of beans.</p>
+
+<p>Spring containers fall into one of two groups. They are either Bean Factories (which allow for the creation of beans, and provides dependency injection), or Application Contexts (which include additional features such as loading properties files).</p>
+
+<pre><code class="language-language-java">ConfigStore configStore = container.getBean(ConfigStore.class);
+</code></pre>
+
+<p>Whichever type of container you have, once it is created and has beans loaded, you can use the <code>container.getBean(class)</code> method to get a bean of the given type.</p>
+
+<p>So… how do we get the beans loaded into a container?</p>
+
+<p><strong>Component Scanning</strong></p>
+
+<p>To get Spring to create the beans you want, you can either manually configure the beans, or instruct Spring to create the beans through component scanning. As much as possible you should prefer component scanning, as it&rsquo;s less explicit code, so I&rsquo;ll cover that first.</p>
+
+<p>Component scanning is the method by which Spring can automatically figure out which beans need to be created.</p>
+
+<pre><code class="language-language-java">@Configuration
+@ComponentScan
+class MyAppConfiguration {
+    
+}
+
+
+@Component
+public class S3ConfigStore implements ConfigStore {
+}
+</code></pre>
+
+<p>We first label a class with the <code>@Component</code> annotation. Then we ensure that this class is scanned, by adding a <code>@ComponentScan</code> annotation to a class which already has the <code>@Configuration</code> annotation.</p>
+
+<p>By default, <code>@ComponentScan</code> will scan the same package as the configuration class, but the package to be scanned can be changed using the <code>basePackages</code> or <code>basePackageClasses</code> arguments.</p>
+
+<p><strong>Manual Bean Creation</strong></p>
+
+<p>If component scanning isn&rsquo;t sufficient for your needs, for example if you&rsquo;re needing to inject dependencies on third party libraries, you&rsquo;ll need to turn to manually specifying the beans to be created.</p>
+
+<pre><code class="language-language-java">@Configuration
+class MyAppConfiguration {
+
+    @Bean
+    public AWSCredentialsProviderChain awsCredentialsProviderChain() {
+        return new AWSCredentialsProviderChain(new DefaultAWSCredentialsProviderChain());
+    }
+
+    @Bean
+    public DbMetadata dbMetadata(AppProperties appProperties) {
+        return new DynamoDbMetadata(appProperties.getTableName());
+    }
+}
+</code></pre>
+
+<p>For this, our <code>@Configuration</code> classes can contain contain explicitly created beans, which will be loaded into the Spring context.</p>
+
+<p>To make this work, you should create, inside your <code>@Configuration</code> class, a method which returns and instance of the class you want to wire up. This method should be annotated <code>@Bean</code>. The bean will be given the same name as the method, or the <code>name</code> argument to the annotation, if provided.</p>
+
+<p>If these bean methods are called repeatedly (for example by your own code) Spring will intercept the calls and ensure that the same bean is returned for all calls.</p>
+
+<p>If this bean depends on another bean, you can specify that bean specifically by calling the bean&rsquo;s method (e.g. <code>AppProperties appProperties = appProperties()</code>), or you can specify the class or interface that you need to be wired by specifying an argument in the method you are creating. Spring will ensure that this argument is set when calling the method.</p>
+
+<p><strong>Autowiring</strong></p>
+
+<p>In the previous example, the wiring up of AppProperties into dbMetadata is an example of autowiring, where Spring will ensure that dependencies are met. Having the AppProperties argument indicated to Spring that there was a dependency on AppProperties.</p>
+
+<p>In other components, you should use the <code>@Autowired</code> annotation</p>
+
+<p>You can apply an <code>@Autowired</code> annotation to any properties, constructors, or methods that you want to be wired up. Spring will search for any matching beans in the context - and if it finds exactly one - it will set the value (or call the method). If Spring finds 0 beans, and the <code>required</code> argument has not been set to false, it will throw an exception. If there is ambiguity (multiple beans could be wired) then an exception will also be thrown.</p>
+
+<pre><code class="language-language-java">public class TaskExecutor {
+
+    private ConfigStore configStore;
+
+    @Autowired
+    public TaskExecutor(ConfigStore configStore) {
+        this.configStore = configStore;
+    }
+}
+</code></pre>
+
+<p>In this case, because there is a single constructor - the Autowired annotation could be skipped and the behaviour would be the same.</p>
+
+<p><strong>Ambiguous Bean Wiring</strong></p>
+
+<p>In the case of multiple beans fitting a requirement, this can be solved by making the requirements more strict, or by declaring one bean the primary choice.</p>
+
+<pre><code class="language-language-java">@Configuration
+class MyAppConfiguration {
+    @Primary
+    @Bean
+    public AWSCredentialsProviderChain awsCredentialsProviderChain() {
+        return new AWSCredentialsProviderChain(new DefaultAWSCredentialsProviderChain());
+    }
+}
+</code></pre>
+
+<p>The <code>@Primary</code> annotation can be applied to a class which has <code>@Component</code> applied, or a method which has <code>@Bean</code> applied, to specify that this bean should be the primary choice in case of conflict. If two primary beans are in conflict, then an exception will be thrown.</p>
+
+<pre><code class="language-language-java">@Configuration
+class MyAppConfiguration {
+
+    @Bean
+    public AWSCredentialsProviderChain awsCredentialsProviderChain() {
+        return new AWSCredentialsProviderChain(new DefaultAWSCredentialsProviderChain());
+    }
+
+    @Bean
+    public AWSSystem awsSystem(@Qualifier(&quot;awsCredentialsProviderChain&quot;) AWSCredentialsProviderChain credentials) {
+       // ...
+    }
+
+}
+</code></pre>
+
+<p>Alternatively, the <code>@Qualifier</code> annotation can be added to a method or variable annotated with <code>@Autowired</code>. A string can be provided as an argument to <code>@Qualifier</code> to specify that only the bean with the given qualifier be autowired.</p>
+
+<p>By default a bean&rsquo;s qualifier is its id (which is by default the name of the method or class that created it).</p>
+
+<pre><code class="language-language-java">@Configuration
+class MyAppConfiguration {
+
+    @Bean
+    @Qualifier(“live-credentials”)
+    public AWSCredentialsProviderChain awsCredentialsProviderChain() {
+        return new AWSCredentialsProviderChain(new DefaultAWSCredentialsProviderChain());
+    }
+
+    @Bean
+    public AWSSystem awsSystem(@Qualifier(“live-credentials&quot;) AWSCredentialsProviderChain credentials) {
+       // ...
+    }
+
+}
+</code></pre>
+
+<p>If the automatically generated qualifier isn’t enough - you can specify the qualifier by using the @Qualifier annotation on the method or class that creates the bean.</p>
+
+<p><strong>Profiles</strong></p>
+
+<p>Sometimes we want different beans to be active in different environments. For example we may want to use an in-memory database during development and a connection to a Postgres database in production. To avoid having to recompile the code between environment changes (potentially introducing bugs), Spring allows for a concept of &ldquo;profiles&rdquo; which are set at runtime.</p>
+
+<pre><code class="language-language-java">@Configuration
+@Profile(&quot;test&quot;)
+class MyAppConfiguration {
+
+}
+
+
+@Bean
+@Profile(&quot;dev&quot;)
+public AWSCredentialsProviderChain awsCredentialsProviderChain() {
+    return new AWSCredentialsProviderChain(new DefaultAWSCredentialsProviderChain());
+}
+
+
+@Component
+@Profile(&quot;live&quot;)
+public class S3ConfigStore implements ConfigStore {
+    
+}
+</code></pre>
+
+<p>To indicate that a bean, component, or configuration class is only to be used by a certain profile, apply the <code>@Profile</code> annotation.</p>
+
+<pre><code class="language-language-java">@ActiveProfiles(&quot;dev&quot;)
+public class TestComponentA extends TestCase {
+}
+
+-Dspring.profiles.active=dev
+</code></pre>
+
+<p>When running your application, set the -Dspring.profiles.active parameter to set the active profile, or during tests use the <code>@ActiveProfiles</code> annotation.</p>
+
+<p><strong>Conditional Beans</strong></p>
+
+<p>You can also create an implementation of the <code>Conditional</code> class, which has a <code>matches</code> method that returns true if the bean should be created and false otherwise.</p>
+
+<p>This condition can be used for the creation of beans by using the <code>@Conditional</code> annotation and pointing it to your Conditional implementation.</p>
+
+<pre><code class="language-language-java">class DynamoDBConfiguredCondition implements Condition {
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        return (System.getProperty(&quot;dynamodb.port&quot;) != null);
+    }
+}
+
+@Bean
+@Conditional(DynamoDBConfiguredCondition.class)
+public DynamoDB dynamoDB() {
+    
+}
+</code></pre>
+
+<p>The <code>matches</code> method is passed a <code>ConditionContext</code> and a <code>AnnotatedTypeMetadata</code>. The <code>ConditionContext</code> allows for looking into the current context: created beans, resources on the classpath, etc. The <code>AnnotatedTypeMetadata</code> lets the method respond to other annotations on the same bean.</p>
+
+<p><strong>Bean Scopes</strong></p>
+
+<p>By default, every bean is a singleton, and if it is in injected in multiple places the same bean will be injected. This can be changed using the <code>@Scope</code> annotation.</p>
+
+<pre><code class="language-language-java">@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class LRUCache {
+
+}
+
+@Component
+@Scope(WebApplicationContext.SCOPE_SESSION)
+public class ShoppingCart {
+
+}
+
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_REQUEST)
+public class RandomGenerator {
+
+}
+</code></pre>
+
+<p>The most generally useful alternative scopes are <code>ConfigurableBeanFactory.SCOPE_PROTOTYPE</code> which means that each injection will result in a new instance, <code>WebApplicationContext.SCOPE_SESSION</code> which means that each web session will result in a new instance, and <code>ConfigurableBeanFactory.SCOPE_REQUEST</code> which means that each web request results in a new instance.</p>
+
+<p>If you mix singleton beans with session or request scoped beans, you will eventually run into a problem where a singleton needs to refer to the currently active instance of another bean. To deal with this, Spring can inject a proxy of the bean which relays calls to the currently active instance. To use this see the <code>proxyMode</code> argument of <code>@Scope</code>.</p>
+
+<p>That&rsquo;s all for this quick overview of Spring wiring and dependency injection. It&rsquo;s not organised as well as it could be but I hope it&rsquo;ll serve as a useful reference for some of the less used parts of Spring&rsquo;s dependency injection tools.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+					<nav class="nav tags">
+							<ul class="flat">
+								
+								<li><a href="/tags/java">Java</a></li>
+								
+								<li><a href="/tags/spring">Spring</a></li>
+								
+								<li><a href="/tags/programming">programming</a></li>
+								
+							</ul>
+					</nav>
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

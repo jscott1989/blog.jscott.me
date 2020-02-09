@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code: Day 23 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code: Day 23" />
+<meta property="og:description" content="For Day 23, the challenge is to understand what some assembly code is doing and calculate the answer. This is probably my favourite challenge so far.
+My initial interpreter is:
+import time import Queue from itertools import cycle with open(&quot;input.txt&quot;, &quot;r&quot;) as o: commands = o.read().split(&quot;\n&quot;) class Program(): def __init__(self, commands, debug_mode=True): self.registers = {} if not debug_mode: self.registers[&quot;a&quot;] = 1 self.ptr = 0 self.commands = commands def get_value(self, f): try: return int(f) except ValueError: return self." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-day-23/" />
+<meta property="article:published_time" content="2017-12-24T19:32:06+00:00" />
+<meta property="article:modified_time" content="2017-12-24T19:32:06+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code: Day 23"/>
+<meta name="twitter:description" content="For Day 23, the challenge is to understand what some assembly code is doing and calculate the answer. This is probably my favourite challenge so far.
+My initial interpreter is:
+import time import Queue from itertools import cycle with open(&quot;input.txt&quot;, &quot;r&quot;) as o: commands = o.read().split(&quot;\n&quot;) class Program(): def __init__(self, commands, debug_mode=True): self.registers = {} if not debug_mode: self.registers[&quot;a&quot;] = 1 self.ptr = 0 self.commands = commands def get_value(self, f): try: return int(f) except ValueError: return self."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code: Day 23</h1>
+			<div class="meta">Posted at &mdash; Dec 24, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<p>For <a href="http://adventofcode.com/2017/day/23">Day 23</a>, the challenge is to understand what some assembly code is doing and calculate the answer. This is probably my favourite challenge so far.</p>
+
+<p>My initial interpreter is:</p>
+
+<pre><code class="language-language-python">import time
+import Queue
+from itertools import cycle
+with open(&quot;input.txt&quot;, &quot;r&quot;) as o:
+    commands = o.read().split(&quot;\n&quot;)
+
+
+class Program():
+    def __init__(self, commands, debug_mode=True):
+        self.registers = {}
+        if not debug_mode:
+            self.registers[&quot;a&quot;] = 1
+        self.ptr = 0
+        self.commands = commands
+
+    def get_value(self, f):
+        try:
+            return int(f)
+        except ValueError:
+            return self.registers.get(f, 0)
+
+    def run(self):
+        self.mul_counter = 0
+        while True:
+            if self.ptr &gt;= len(self.commands):
+                break
+            cmd = self.commands[self.ptr].split(&quot; &quot;)
+            self.ptr += 1
+            if cmd[0] == &quot;set&quot;:
+                self.registers[cmd[1]] = self.get_value(cmd[2])
+            elif cmd[0] == &quot;sub&quot;:
+                self.registers[cmd[1]] = self.get_value(cmd[1]) - self.get_value(cmd[2])
+            elif cmd[0] == &quot;mul&quot;:
+                self.registers[cmd[1]] = self.get_value(cmd[1]) * self.get_value(cmd[2])
+                self.mul_counter += 1
+            elif cmd[0] == &quot;jnz&quot;:
+                if not self.get_value(cmd[1]) == 0:
+                    self.ptr += self.get_value(cmd[2]) - 1
+
+
+part1 = Program(commands)
+part1.run()
+print &quot;Part 1&quot;, part1.mul_counter
+
+part2 = Program(commands, False)
+part2.run()
+print &quot;Part 2&quot;, part2.registers[&quot;h&quot;]
+</code></pre>
+
+<p>However this of course will not run fast enough to execute part 2. Here is my input:</p>
+
+<pre><code>set b 67
+set c b
+jnz a 2
+jnz 1 5
+mul b 100
+sub b -100000
+set c b
+sub c -17000
+set f 1
+set d 2
+set e 2
+set g d
+mul g e
+sub g b
+jnz g 2
+set f 0
+sub e -1
+set g e
+sub g b
+jnz g -8
+sub d -1
+set g d
+sub g b
+jnz g -13
+jnz f 2
+sub h -1
+set g b
+sub g c
+jnz g 2
+jnz 1 3
+sub b -17
+jnz 1 -23
+</code></pre>
+
+<p>I first converted that into something a little higher level:</p>
+
+<pre><code>        b = 67
+        c = b
+        if (a != 0) goto JMP1
+        goto JMP2
+JMP1:   b = b * 100
+        b = b + 100000
+        c = b
+        c = c + 17000
+JMP2:   f = 1
+        d = 2
+JMP5:   e = 2
+JMP4:   g = d
+        g = g * e
+        g = g - b
+        if (g != 0) goto JMP3
+        f = 0
+JMP3:   e = e + 1
+        g = e
+        g = g - b
+        if (g != 0) goto JMP4
+        d = d + 1
+        g = d
+        g = g - b
+        if (g != 0) goto JMP5
+        if (f != 0) goto JMP6
+        h = h + 1
+JMP6:   g = b
+        g = g - c
+        if (g != 0) goto JMP7
+        exit
+JMP7:   b = b + 17
+        goto JMP2
+</code></pre>
+
+<p>And then through a series of further conversions realised more about what it was doing until I converted it into valid Python:</p>
+
+<pre><code>from math import sqrt
+b = 106700
+c = 123700
+h = 0
+
+for i in range(b, c + 17, 17):
+    for d in range(2, int(sqrt(i))):
+        if i % d == 0:
+            h += 1
+            break
+
+print h
+</code></pre>
+
+<p>(Only looping until the square root is an optimization because if it is not prime a factor must be found by the square root). Running this gave me the correct answer.</p>
+
+<p>A really nice challenge!</p>
+
+<p>Advent of Code runs every day up to Christmas, <a href="http://adventofcode.com">you should join in!</a>.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

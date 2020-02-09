@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code: Day 25 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code: Day 25" />
+<meta property="og:description" content="For Day 25, the challenge is to implement a turing machine simulator.
+My Python solution is:
+states = {} current_state = None current_rule = None def enter_state(line): global current_state current_state = line.rsplit(&quot; &quot;, 1)[-1][:-1] if current_state not in states: states[current_state] = {} def enter_rule(line): global current_rule current_rule = int(line.rsplit(&quot; &quot;, 1)[-1][:-1]) if current_rule not in states[current_state]: states[current_state][current_rule] = [] def add_instruction(line): if line.startswith(&quot;- Write the value&quot;): states[current_state][current_rule].append((&quot;write&quot;, int(line.rsplit(&quot; &quot;, 1)[1][:-1]))) elif line." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-day-25/" />
+<meta property="article:published_time" content="2017-12-25T12:00:00+00:00" />
+<meta property="article:modified_time" content="2017-12-25T12:00:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code: Day 25"/>
+<meta name="twitter:description" content="For Day 25, the challenge is to implement a turing machine simulator.
+My Python solution is:
+states = {} current_state = None current_rule = None def enter_state(line): global current_state current_state = line.rsplit(&quot; &quot;, 1)[-1][:-1] if current_state not in states: states[current_state] = {} def enter_rule(line): global current_rule current_rule = int(line.rsplit(&quot; &quot;, 1)[-1][:-1]) if current_rule not in states[current_state]: states[current_state][current_rule] = [] def add_instruction(line): if line.startswith(&quot;- Write the value&quot;): states[current_state][current_rule].append((&quot;write&quot;, int(line.rsplit(&quot; &quot;, 1)[1][:-1]))) elif line."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code: Day 25</h1>
+			<div class="meta">Posted at &mdash; Dec 25, 2017</div>
+		</div>
+
+		<div class="markdown">
+			<p>For <a href="http://adventofcode.com/2017/day/25">Day 25</a>, the challenge is to implement a turing machine simulator.</p>
+
+<p>My Python solution is:</p>
+
+<pre><code class="language-language-python">states = {}
+
+current_state = None
+current_rule = None
+
+def enter_state(line):
+    global current_state
+    current_state = line.rsplit(&quot; &quot;, 1)[-1][:-1]
+    if current_state not in states:
+        states[current_state] = {}
+
+def enter_rule(line):
+    global current_rule
+    current_rule = int(line.rsplit(&quot; &quot;, 1)[-1][:-1])
+    if current_rule not in states[current_state]:
+        states[current_state][current_rule] = []
+
+def add_instruction(line):
+    if line.startswith(&quot;- Write the value&quot;):
+        states[current_state][current_rule].append((&quot;write&quot;, int(line.rsplit(&quot; &quot;, 1)[1][:-1])))
+    elif line.startswith(&quot;- Move one slot&quot;):
+        if line.endswith(&quot;left.&quot;):
+            states[current_state][current_rule].append((&quot;move&quot;, -1))
+        elif line.endswith(&quot;right.&quot;):
+            states[current_state][current_rule].append((&quot;move&quot;, 1))
+        else:
+            print &quot;Unknown direction&quot;
+    elif line.startswith(&quot;- Continue with state&quot;):
+        states[current_state][current_rule].append((&quot;change&quot;, line.rsplit(&quot; &quot;, 1)[1][:-1]))
+    else:
+        print &quot;Unknown instruction&quot;, line
+
+
+with open(&quot;input.txt&quot;, &quot;r&quot;) as o:
+    lines = o.readlines()
+    start_state = lines[0].strip().rsplit(&quot; &quot;, 1)[1][:-1]
+    checksum_steps = int(lines[1].split(&quot; &quot;)[-2])
+    
+    for l in lines[2:]:
+        line = l.strip()
+        if line.startswith(&quot;In state&quot;):
+            enter_state(line)
+        elif line.startswith(&quot;If the current value is&quot;):
+            enter_rule(line)
+        elif line.startswith(&quot;- &quot;):
+            add_instruction(line)
+
+tape = {}
+ptr = 0
+
+current_state = start_state
+for i in range(checksum_steps):
+    current_value = tape.get(ptr, 0)
+    for step in states[current_state][current_value]:
+        if step[0] == &quot;write&quot;:
+            tape[ptr] = step[1]
+        elif step[0] == &quot;move&quot;:
+            ptr += step[1]
+        elif step[0] == &quot;change&quot;:
+            current_state = step[1]
+        else:
+            print &quot;Unknown command&quot;
+
+print len([i for i in tape.values() if i == 1])
+</code></pre>
+
+<p>And that&rsquo;s it! I really enjoyed completing Advent of Code this year. A lot of really fun little puzzles to fill in my morning.</p>
+
+<p>If you haven&rsquo;t taken part yourself, you should know that all of the puzzles are still available. <a href="http://adventofcode.com">You should give it a go!</a>.</p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code 2018: Day 2 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code 2018: Day 2" />
+<meta property="og:description" content="Part 1
+Part 1 is a trivial checksum calculation where we need to loop through each ID - and count the number of IDs which have at least one character repeated exactly twice - and separately count the number of IDs which have at least one character repeated exactly three times. Then multiple these numbers together.
+I haven&rsquo;t posted this code separated as it&rsquo;s quite simple - it&rsquo;s included in the part 2 code." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code/" />
+<meta property="article:published_time" content="2018-12-02T10:30:40+00:00" />
+<meta property="article:modified_time" content="2018-12-02T10:30:40+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code 2018: Day 2"/>
+<meta name="twitter:description" content="Part 1
+Part 1 is a trivial checksum calculation where we need to loop through each ID - and count the number of IDs which have at least one character repeated exactly twice - and separately count the number of IDs which have at least one character repeated exactly three times. Then multiple these numbers together.
+I haven&rsquo;t posted this code separated as it&rsquo;s quite simple - it&rsquo;s included in the part 2 code."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code 2018: Day 2</h1>
+			<div class="meta">Posted at &mdash; Dec 2, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<p><strong>Part 1</strong></p>
+
+<p>Part 1 is a trivial checksum calculation where we need to loop through each ID - and count the number of IDs which have at least one character repeated exactly twice - and separately count the number of IDs which have at least one character repeated exactly three times. Then multiple these numbers together.</p>
+
+<p>I haven&rsquo;t posted this code separated as it&rsquo;s quite simple - it&rsquo;s included in the part 2 code.</p>
+
+<p><strong>Part 2</strong></p>
+
+<p>Part 2 is interesting. We have to find a pair of ids which differ on only one character. The naive solution is to loop through each pair and check if they differ by exactly one. If we call the number of boxes N, and the length of the ID L, this would be O(N²) time and constant space.</p>
+
+<p>My solution is to generate L hashes per box (by replacing each character with a character that does not appear in any id), insert them into a map, and then find any collections which contain exactly two. This is O(LN) time and space. In this challenge L is a fixed number so it&rsquo;s effectively O(N).</p>
+
+<pre><code class="language-language-java">class BoxId {
+    private final String id;
+    private final boolean hasTwoSameLetter;
+    private final boolean hasThreeSameLetter;
+
+    BoxId(String id) {
+        this.id = id;
+        Collection&lt;Long&gt; counts = calculateCharacterCounts(id);
+        hasTwoSameLetter = counts.contains(2L);
+        hasThreeSameLetter = counts.contains(3L);
+    }
+
+    /**
+     * @return A collection of the character counts from this string.
+     *         e.g. &quot;test&quot; would return { 2, 1, 1 } (2 t, 1 e, 1 s)
+     */
+    private static Collection&lt;Long&gt; calculateCharacterCounts(String id) {
+        return id.chars().boxed()
+                .collect(Collectors.groupingBy(c -&gt; c, Collectors.counting()))
+                .values();
+    }
+
+    String id() {
+        return id;
+    }
+
+    boolean hasTwoSameLetter() {
+        return hasTwoSameLetter;
+    }
+
+    boolean hasThreeSameLetter() {
+        return hasThreeSameLetter;
+    }
+
+    /**
+     * Generate the ID with each character replaced with an underscore.
+     * For example, if the ID is &quot;abcdefg&quot; then the result will be:
+     *    {&quot;_bcdefg&quot;, &quot;a_cdefg&quot;, &quot;ab_defg&quot;, &quot;abc_efg&quot;, &quot;abcde_g&quot;, &quot;abcdef_&quot;}
+     */
+    Collection&lt;String&gt; generateStringsOfIdWithEachCharacterReplacedWithUnderscore() {
+        List&lt;String&gt; strings = new ArrayList&lt;&gt;();
+        StringBuilder builder = new StringBuilder(id);
+
+        for (int i = 0; i &lt; id.length(); i++) {
+            builder.replace(i, i + 1, &quot;_&quot;);
+
+            strings.add(builder.toString());
+
+            builder.replace(i, i + 1, String.valueOf(id.charAt(i)));
+        }
+
+        return strings;
+    }
+}
+
+class BoxCollection {
+    private final List&lt;BoxId&gt; boxIds;
+    private final int checksum;
+
+    BoxCollection(List&lt;BoxId&gt; boxIds) {
+        this.boxIds = boxIds;
+        checksum = calculateChecksum();
+    }
+
+    private int calculateChecksum() {
+        int twoCount = 0;
+        int threeCount = 0;
+
+        for (BoxId boxId: boxIds) {
+            if (boxId.hasThreeSameLetter()) {
+                threeCount++;
+            }
+            if (boxId.hasTwoSameLetter()) {
+                twoCount++;
+            }
+        }
+
+        return twoCount * threeCount;
+    }
+
+    /**
+     * Calculate the checksum according to the task.
+     *
+     * This counts the number of boxIds containing exactly two of any letter and then separately counting those
+     * with exactly three of any letter. These two counts are multiplied together to produce the checksum.
+     */
+    int checksum() {
+        return checksum;
+    }
+
+    /**
+     * Find every set of two boxIds which differ in only one character.
+     */
+    Collection&lt;CorrectBoxSet&gt; findCorrectBoxIds() {
+        // The algorithm here is that for each of the N boxIds, we generate L hashes (where L is the length of the
+        // id). Each of these is used as the key in a map, so that IDs which are one different from each other
+        // will be together. We then loop through each value in the map and find any which contain exactly two ids
+        // these will be returned.
+        Collection&lt;CorrectBoxSet&gt; correctBoxSets = new HashSet&lt;&gt;();
+        Map&lt;String, Collection&lt;BoxId&gt;&gt; boxIdHashes = new HashMap&lt;&gt;();
+
+        for (BoxId boxId : boxIds) {
+            for (String hash : boxId.generateStringsOfIdWithEachCharacterReplacedWithUnderscore()) {
+                addToCollection(boxIdHashes, hash, boxId);
+            }
+        }
+
+        for (Collection&lt;BoxId&gt; set : boxIdHashes.values()) {
+            if (set.size() == 2) {
+                BoxId[] setArray = set.toArray(new BoxId[2]);
+                correctBoxSets.add(new CorrectBoxSet(setArray[0], setArray[1]));
+            }
+        }
+        return correctBoxSets;
+    }
+
+    private void addToCollection(Map&lt;String, Collection&lt;BoxId&gt;&gt; boxIdHashes, String hash, BoxId boxId) {
+        if (!boxIdHashes.containsKey(hash)) {
+            boxIdHashes.put(hash, new HashSet&lt;&gt;());
+        }
+        boxIdHashes.get(hash).add(boxId);
+    }
+}
+
+class CorrectBoxSet {
+    private BoxId boxId1;
+    private BoxId boxId2;
+
+    CorrectBoxSet(BoxId boxId1, BoxId boxId2) {
+        this.boxId1 = boxId1;
+        this.boxId2 = boxId2;
+    }
+
+    String calculateOverlap() {
+        StringBuilder overlap = new StringBuilder();
+
+        int ptr = 0;
+        while (ptr &lt; boxId1.id().length() &amp;&amp; ptr &lt; boxId2.id().length()) {
+            if (boxId1.id().charAt(ptr) == boxId2.id().charAt(ptr)) {
+                overlap.append(boxId1.id().charAt(ptr));
+            }
+            ptr++;
+        }
+
+        return overlap.toString();
+    }
+}
+
+public class BoxScanner {
+    public static void main(String[] args) {
+        if (args.length &lt; 1) {
+            System.err.println(&quot;Error: First argument must be box IDs string&quot;);
+            System.exit(1);
+        }
+
+        String[] boxIdStrings = args[0].split(&quot;[ \n]&quot;);
+
+        List&lt;BoxId&gt; boxIds = Stream.of(boxIdStrings).map(BoxId::new).collect(Collectors.toList());
+
+        BoxCollection boxCollection = new BoxCollection(boxIds);
+
+        System.out.println(String.format(&quot;The checksum is %s&quot;, boxCollection.checksum()));
+
+        Collection&lt;CorrectBoxSet&gt; correctBoxSets = boxCollection.findCorrectBoxIds();
+
+        for (CorrectBoxSet correctBoxSet : correctBoxSets) {
+            System.out.println(String.format(&quot;Common letters in correct box: %s&quot;, correctBoxSet.calculateOverlap()));
+        }
+    }
+}
+</code></pre>
+
+<p><a href="http://adventofcode.com/">Advent Of Code runs until December 25. You should get involved!</a></p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

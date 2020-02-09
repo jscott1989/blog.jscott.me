@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>JScott.me</title>
+    <link>https://blog.jscott.me/</link>
+    <description>Recent content on JScott.me</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Sun, 09 Dec 2018 12:46:45 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.jscott.me/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Advent of Code 2018: Day 5</title>
+      <link>https://blog.jscott.me/post/advent-of-code-2018-day-5/</link>
+      <pubDate>Sun, 09 Dec 2018 12:46:45 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-2018-day-5/</guid>
+      <description>Ooh that&amp;rsquo;s better. Kotlin is a much better match for Advent of Code than Java. I&amp;rsquo;ve never really used Kotlin in any meaningful way so would love to hear feedback if there&amp;rsquo;s a better way I could be using it.
+Part 1
+Part 1 of today&amp;rsquo;s task involves us being given a string of characters, inside which we should replace every pair of characters which are adjacent, and are the same character but different case.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code 2018: Day 4</title>
+      <link>https://blog.jscott.me/post/advent-of-code-2018-day-4/</link>
+      <pubDate>Sun, 09 Dec 2018 12:19:44 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-2018-day-4/</guid>
+      <description>Wow, taking the effort to make a reasonable API for these one off scripts really takes it out of you, I kind of give up half way today. I think today will be the last where I actually consider the readability and reusability of my answers.
+From tomorrow I&amp;rsquo;ll be moving to Kotlin to make data objects easier to make and I&amp;rsquo;ll stop worrying about ensuring my objects are immutable etc.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code 2018: Day 3</title>
+      <link>https://blog.jscott.me/post/advent-of-code-2018-day-3/</link>
+      <pubDate>Sat, 08 Dec 2018 10:37:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-2018-day-3/</guid>
+      <description>Part 1
+Part 1 involves taking a collection of &amp;ldquo;claims&amp;rdquo; which are rectangles, and calculating how many points exist in at least two claims.
+My solution is slow because of creating a Point for each coordinate. It could be sped up by replacing the Point with something lighter. It could also be sped up by doing a first sweep through the claims to find any pairs which overlap (using an appropriate data structure such as an R-Tree) and then calculating the overlap between overlapping pairs.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code 2018: Day 2</title>
+      <link>https://blog.jscott.me/post/advent-of-code/</link>
+      <pubDate>Sun, 02 Dec 2018 10:30:40 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code/</guid>
+      <description>Part 1
+Part 1 is a trivial checksum calculation where we need to loop through each ID - and count the number of IDs which have at least one character repeated exactly twice - and separately count the number of IDs which have at least one character repeated exactly three times. Then multiple these numbers together.
+I haven&amp;rsquo;t posted this code separated as it&amp;rsquo;s quite simple - it&amp;rsquo;s included in the part 2 code.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code 2018: Day 1</title>
+      <link>https://blog.jscott.me/post/advent-of-code-2018-day-1/</link>
+      <pubDate>Sat, 01 Dec 2018 11:05:39 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-2018-day-1/</guid>
+      <description>This year I&amp;rsquo;ll be submitting my solutions in Java. I haven&amp;rsquo;t done this in the past because it&amp;rsquo;s rather verbose and not ideal for the hacky little scripts that are usually required for Advent of Code, but it seems like good practice for writing readable code!
+Part 1
+The first part of Day 1 involves receiving a list of &amp;ldquo;frequency adjustments&amp;rdquo; (a positive or negative integer) and summing them. This could be done in one line with something like:</description>
+    </item>
+    
+    <item>
+      <title>Reviewing Data Structures and Algorithms</title>
+      <link>https://blog.jscott.me/post/reviewing-data-structures-and-algorithms/</link>
+      <pubDate>Sun, 02 Sep 2018 17:15:55 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/reviewing-data-structures-and-algorithms/</guid>
+      <description>In the past I&amp;rsquo;ve worked with a number of people who are solid programmers but do not have a traditional computer science background. With no exposure to data structures and algorithms, sub-optimal decisions can be made.
+To help with this, I&amp;rsquo;ve taken to having 1-on-1 sessions to review the fundamentals of data structures and algorithms. After doing this a few times I put together some slides to help guide the sessions, which can be seen here:</description>
+    </item>
+    
+    <item>
+      <title>Edinburgh Fringe Festival 2018</title>
+      <link>https://blog.jscott.me/post/edinburgh-fringe-festival-2018/</link>
+      <pubDate>Thu, 23 Aug 2018 12:59:45 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/edinburgh-fringe-festival-2018/</guid>
+      <description>I go to the Edinburgh Fringe Festival for one weekend every year. Last year we attended £¥€$ by Ontroerend Goed which I&amp;rsquo;ve been meaning to write about as it has some interesting ideas for game design. However, as I just came back from this year&amp;rsquo;s festival - I figured it&amp;rsquo;s not a terrible idea to write up short summaries of the shows I attended.
+This year I saw 15 shows in 3 days.</description>
+    </item>
+    
+    <item>
+      <title>dotTest</title>
+      <link>https://blog.jscott.me/post/dottest/</link>
+      <pubDate>Sat, 28 Apr 2018 15:23:45 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/dottest/</guid>
+      <description>The name test is reserved by the Internet Engineering Task Force (IETF) in RFC 2606 (June 1999) as a domain name that is not intended to be installed as a top-level domain (TLD) in the global Domain Name System (DNS) of the Internet for production use.
+ dotTest is a small script which allows you to configure local .test domains to point to different ports on your machine. For example, if you&amp;rsquo;re developing some software which consists of a frontend service (running on port 8000) and a backend service (running on port 8080), it can be more clear to use http://frontend.</description>
+    </item>
+    
+    <item>
+      <title>I want to change my password</title>
+      <link>https://blog.jscott.me/post/i-want-to-change-my-password/</link>
+      <pubDate>Sat, 31 Mar 2018 09:10:29 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/i-want-to-change-my-password/</guid>
+      <description>My wife&amp;rsquo;s phone was stolen last week. Though her data is password (/fingerprint) protected, and all of her passwords are stored in 1Password behind a strong master password, she still felt more comfortable after changing the passwords for things accessible from her phone.
+Since she was doing it, I decided to go through and change some of the passwords I haven&amp;rsquo;t changed in some time. While doing that I found three common ways that websites would inconvenience me.</description>
+    </item>
+    
+    <item>
+      <title>Using Lifecycle Hooks to better understand your AWS environment</title>
+      <link>https://blog.jscott.me/post/using-lifecycle-hooks-to-better-understand-your-aws-environment/</link>
+      <pubDate>Mon, 19 Mar 2018 09:00:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/using-lifecycle-hooks-to-better-understand-your-aws-environment/</guid>
+      <description>If you have a large number of EC2 instances running in an AWS environment, it can be difficult to really understand what is happening in production.
+In particular, when you use autoscaling groups, it can be difficult to notice when and why your instances are dying and requiring a restart. For the most part this isn&amp;rsquo;t a problem, but in rare cases it&amp;rsquo;s possible to run up large bills by restarting instances too frequently (for example if a system fails to start and so is constantly rebooted), and though usually you&amp;rsquo;re perfectly happy for your machines to die and be automatically replaced, sometimes it can be useful to jump on to a dead machine to figure out what went wrong.</description>
+    </item>
+    
+    <item>
+      <title>Facts and Fallacies of Software Engineering</title>
+      <link>https://blog.jscott.me/post/the-facts-and-fallacies-of-software-engineering/</link>
+      <pubDate>Mon, 12 Mar 2018 09:00:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/the-facts-and-fallacies-of-software-engineering/</guid>
+      <description>This book is mostly a restatement of a lot of Robert Glass&amp;rsquo; previous work.
+As implied by the title, it covers a collection of facts and fallacies about Software Engineering. For each one it gives justifications for why it is true or not true, including referencing appropriate research.
+I found very little of the content of this book suprising, and I think if people thought about it - most Software Engineers would agree with the majority of what the book says.</description>
+    </item>
+    
+    <item>
+      <title>One Hour One Life</title>
+      <link>https://blog.jscott.me/post/one-hour-one-life/</link>
+      <pubDate>Sun, 04 Mar 2018 09:36:41 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/one-hour-one-life/</guid>
+      <description>Last Week, Jason Rohrer released his latest game, and it&amp;rsquo;s full of interesting ideas that are worth having a play with.
+A couple of years ago, my wife and I created Story of Everyone, which experimented with collaborative content creation and player familial relationships.
+Given the limitations imposed by the competition, the results were of course limited, but we did find some sort of in-game &amp;ldquo;culture&amp;rdquo; building where players would riff off the content contributed by others, creating interesting in-game narratives.</description>
+    </item>
+    
+    <item>
+      <title>Algorithms To Live By: The Computer Science of Human Decisions</title>
+      <link>https://blog.jscott.me/post/algorithms-to-live-by/</link>
+      <pubDate>Mon, 08 Jan 2018 09:00:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/algorithms-to-live-by/</guid>
+      <description>I picked this book up on a whim because it was cheap and had been on my &amp;ldquo;to read&amp;rdquo; list for a while.
+It covers a number of Computer Science algorithms by relating them to real life examples where they are useful. For example the book relates the optimal stopping problem to renting a house, sorting algorithms to organising book shelves, etc.
+I&amp;rsquo;m not so sure there&amp;rsquo;s a lot of value in taking the book&amp;rsquo;s recommendations as practical advice, but this is the first book I&amp;rsquo;ve read that seems like it could explain some interesting algorithms to people not previously interested.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Haskell: Day 1</title>
+      <link>https://blog.jscott.me/post/advent-of-haskell-day-1/</link>
+      <pubDate>Sun, 07 Jan 2018 09:00:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-haskell-day-1/</guid>
+      <description>I recently completed Advent of Code 2017, and enjoyed it so much I&amp;rsquo;m going to go back to do the previous years.
+I ended up doing almost all of this year&amp;rsquo;s in Python as that&amp;rsquo;s my most comfortable language for hacking things out, so I didn&amp;rsquo;t really use this year&amp;rsquo;s challenge as optimally as I could for learning. I&amp;rsquo;ve never done Haskell in anger so right now I&amp;rsquo;m reading Learn You A Haskell for Great Good!</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 25</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-25/</link>
+      <pubDate>Mon, 25 Dec 2017 12:00:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-25/</guid>
+      <description>For Day 25, the challenge is to implement a turing machine simulator.
+My Python solution is:
+states = {} current_state = None current_rule = None def enter_state(line): global current_state current_state = line.rsplit(&amp;quot; &amp;quot;, 1)[-1][:-1] if current_state not in states: states[current_state] = {} def enter_rule(line): global current_rule current_rule = int(line.rsplit(&amp;quot; &amp;quot;, 1)[-1][:-1]) if current_rule not in states[current_state]: states[current_state][current_rule] = [] def add_instruction(line): if line.startswith(&amp;quot;- Write the value&amp;quot;): states[current_state][current_rule].append((&amp;quot;write&amp;quot;, int(line.rsplit(&amp;quot; &amp;quot;, 1)[1][:-1]))) elif line.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 23</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-23/</link>
+      <pubDate>Sun, 24 Dec 2017 19:32:06 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-23/</guid>
+      <description>For Day 23, the challenge is to understand what some assembly code is doing and calculate the answer. This is probably my favourite challenge so far.
+My initial interpreter is:
+import time import Queue from itertools import cycle with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: commands = o.read().split(&amp;quot;\n&amp;quot;) class Program(): def __init__(self, commands, debug_mode=True): self.registers = {} if not debug_mode: self.registers[&amp;quot;a&amp;quot;] = 1 self.ptr = 0 self.commands = commands def get_value(self, f): try: return int(f) except ValueError: return self.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 22</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-22/</link>
+      <pubDate>Sun, 24 Dec 2017 19:29:08 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-22/</guid>
+      <description>For Day 22, the challenge is to follow some rules to spread a virus through an infinite grid.
+import copy marked = {} UP = (0, -1) DOWN = (0, 1) LEFT = (-1, 0) RIGHT = (1, 0) CLEAN = 0 WEAKENED = 1 INFECTED = 2 FLAGGED = 3 def turn(current, turn_direction): if current == UP: return turn_direction elif current == DOWN and turn_direction == LEFT: return RIGHT elif current == DOWN: return LEFT elif current == LEFT and turn_direction == LEFT: return DOWN elif current == LEFT: return UP elif turn_direction == LEFT: return UP return DOWN with open(&amp;quot;input.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 21</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-21/</link>
+      <pubDate>Sun, 24 Dec 2017 15:36:25 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-21/</guid>
+      <description>For Day 21, the challenge is to follow a set of rules to convert some strings.
+import numpy as np rules = {} def flipandrotate(base): np_base = np.array(list(list(x) for x in base.split(&amp;quot;/&amp;quot;))) flipped = np.fliplr(np_base) res = [] for i in range(4): for n in [np_base, flipped]: res.append(&amp;quot;/&amp;quot;.join([&amp;quot;&amp;quot;.join(x) for x in np.rot90(n, i).tolist()])) return res with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: for line in o.readlines(): f, t = line.strip().split(&amp;quot; =&amp;gt; &amp;quot;) for option in flipandrotate(f): if option not in rules: rules[option] = t size = 3 pattern = &amp;quot;.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 20</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day/</link>
+      <pubDate>Sun, 24 Dec 2017 15:35:34 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day/</guid>
+      <description>For Day 20, the challenge is to simulate some particles, removing those that collide.
+import re import copy STABLE = 500 class Particle: def __init__(self, id, p, v, a): self.id = id self.p = p self.v = v self.a = a self.collided = False def tick(self): self.v[0] += self.a[0] self.v[1] += self.a[1] self.v[2] += self.a[2] self.p[0] += self.v[0] self.p[1] += self.v[1] self.p[2] += self.v[2] @property def distance(self): return sum([abs(i) for i in self.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 24</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-24/</link>
+      <pubDate>Sun, 24 Dec 2017 09:49:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-24/</guid>
+      <description>For Day 24, the challenge is to calculate the optimal combination of pieces to build a bridge of sufficient distance and strength.
+My brute force solution in Python is:
+paths = {} with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: for line in o: parts = line.strip().split(&amp;quot;/&amp;quot;) f = int(parts[0]) t = int(parts[1]) if f not in paths: paths[f] = [] if t not in paths: paths[t] = [] paths[f].append(t) paths[t].append(f) def max_score(paths, used_parts, current_pos): scores = [0] for next_path in paths.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 19</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-19/</link>
+      <pubDate>Tue, 19 Dec 2017 18:51:31 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-19/</guid>
+      <description>For Day 19, the challenge is to follow a map, recording letters that are passed on the route.
+import time UP = (0, -1) DOWN = (0, 1) LEFT = (-1, 0) RIGHT = (1, 0) with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: m = o.readlines() y = 0 x = m[y].index(&amp;quot;|&amp;quot;) direction = DOWN path = [] steps = 0 def read(m, x, y): if len(m) &amp;lt;= y or len(m[y]) &amp;lt;= x: return &amp;quot; &amp;quot; return m[y][x] def peek(m, x, y, direction): x += direction[0] y += direction[1] return read(m, x, y) while True: if read(m, x, y).</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 18</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-18/</link>
+      <pubDate>Tue, 19 Dec 2017 18:35:02 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-18/</guid>
+      <description>For Day 18, we have another challenge that involves implementing a parser. My Python solution is:
+import time import Queue from itertools import cycle with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: commands = o.read().split(&amp;quot;\n&amp;quot;) class Program(): def __init__(self, id, commands, in_queue, out_queue): self.id = id self.registers = {&amp;quot;p&amp;quot;: self.id} self.ptr = 0 self.commands = commands self.in_queue = in_queue self.out_queue = out_queue self.total_sent = 0 self.blocked = False def get_value(self, f): try: return int(f) except ValueError: return self.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 17</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-17/</link>
+      <pubDate>Sun, 17 Dec 2017 10:09:59 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-17/</guid>
+      <description>For Day 17, the challenge is to repeatedly insert numbers into a list following some specific rules, and then find the position of a given number. My Python solution is below:
+with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: steps = int(o.read()) def spinlock(max_number, target): l = [0] ptr = 0 for i in range(1, max_number + 1): ptr = ((ptr + steps) % len(l)) + 1 l.insert(ptr, i) return l[l.index(target) + 1] def spinlock_zero(max_number): ptr = 0 following_zero = None for i in range(1, max_number + 1): ptr = ((ptr + steps) % i) + 1 if ptr == 1: following_zero = i return following_zero print &amp;quot;Part 1&amp;quot;, spinlock(2017, 2017) print &amp;quot;Part 2&amp;quot;, spinlock_zero(50000000)  Part 2 is optimised because I realised that zero will never move from the first position - so there&amp;rsquo;s no need to waste time maintaining a list of 50million integers - we can just track any that get inserted immediately after zero.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 16</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-16/</link>
+      <pubDate>Sat, 16 Dec 2017 08:42:33 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-16/</guid>
+      <description>For Day 16, the challenge is to rearrange characters according to a given &amp;ldquo;dance&amp;rdquo; a billion times and find where they end up. My Python solution is below:
+import string with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: commands = o.read().split(&amp;quot;,&amp;quot;) order = list(string.ascii_lowercase[:16]) def dance(order, commands): order = order[:] for command in commands: if command[0] == &amp;quot;s&amp;quot;: num = int(command[1:]) order = order[-num:] + order[:-num] elif command[0] == &amp;quot;x&amp;quot;: c = command[1:].split(&amp;quot;/&amp;quot;) a = int(c[0]) b = int(c[1]) order[a], order[b] = order[b], order[a] elif command[0] == &amp;quot;p&amp;quot;: c = command[1:].</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 15</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-15/</link>
+      <pubDate>Fri, 15 Dec 2017 20:31:24 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-15/</guid>
+      <description>For Day 15, the challenge is to create some generators which follow particular rules for generating sequences, and then count the number of times the results match. My Python solution is below:
+with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: seed1 = int(o.readline().rsplit(&amp;quot; &amp;quot;, 1)[1]) seed2 = int(o.readline().rsplit(&amp;quot; &amp;quot;, 1)[1]) FACTOR_A = 16807 FACTOR_B = 48271 DIVISION = 2147483647 def generator(previous, factor, multiples=1): while True: previous = (previous * factor) % DIVISION if previous % multiples == 0: yield previous part1_generator1 = generator(seed1, FACTOR_A) part1_generator2 = generator(seed2, FACTOR_B) part2_generator1 = generator(seed1, FACTOR_A, 4) part2_generator2 = generator(seed2, FACTOR_B, 8) def count(generator1, generator2, n): return len([1 for _ in range(n) if generator1.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 14</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-14/</link>
+      <pubDate>Fri, 15 Dec 2017 20:28:56 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-14/</guid>
+      <description>For Day 14, the challenge is to generate a sort of map by generating hashes, and then count the number of contiguous regions in that map. My Python solution is:
+import Queue from day10 import hash with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: key = o.read().strip() ones = [] for i in range(128): h = hash(256, &amp;quot;%s-%s&amp;quot; % (key, i)) l = int(h, 16) ones += [(i, x) for x in range(128) if (l &amp;gt;&amp;gt; x) &amp;amp; 1] part1 = len(ones) regions = 0 queue = Queue.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 13</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-13/</link>
+      <pubDate>Wed, 13 Dec 2017 20:44:08 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-13/</guid>
+      <description>For Day 13, the challenge is to figure out a safe path through some moving &amp;ldquo;scanners&amp;rdquo;. My Python solution is below:
+import itertools layers = {} max_depth = 0 with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: for line in o.readlines(): depth, r = line.strip().split(&amp;quot;: &amp;quot;) layers[int(depth)] = int(r) max_depth = int(depth) def check(layers, delay=0, return_early=False): depth = 0 caught = [] for picosecond in layers: if (picosecond + delay) % (2 * layers[picosecond] - 2) == 0: caught.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 12</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-12/</link>
+      <pubDate>Tue, 12 Dec 2017 09:17:11 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-12/</guid>
+      <description>For Day 12, the challenge is to count the number of isolated groups within a graph. My Python solution is below:
+connections = {} with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: for line in o.read().split(&amp;quot;\n&amp;quot;): p = line.split(&amp;quot; &amp;lt;-&amp;gt; &amp;quot;) connections[int(p[0])] = [int(i.strip()) for i in p[1].split(&amp;quot;,&amp;quot;)] groups = {} marked = [] def check(ptr, group=None): if ptr in marked: return marked.append(ptr) if group is None: group = ptr groups[group] = [] groups[group].</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 11</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-11/</link>
+      <pubDate>Tue, 12 Dec 2017 09:07:11 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-11/</guid>
+      <description>For Day 11, the challenge is to optimize a path through a hex grid. My Python solution is below:
+with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: directions = o.read().split(&amp;quot;,&amp;quot;) DIR = { &amp;quot;n&amp;quot;: (0, 1, -1), &amp;quot;nw&amp;quot;: (-1, 1, 0), &amp;quot;sw&amp;quot;: (-1, 0, 1), &amp;quot;ne&amp;quot;: (1, 0, -1), &amp;quot;s&amp;quot;: (0, -1, 1), &amp;quot;se&amp;quot;: (1, -1, 0) } x = y = z = 0 max_dist = 0 def get_dist(x, y, z): return (abs(x) + abs(y) + abs(z)) / 2 for d in directions: x += DIR[d][0] y += DIR[d][1] z += DIR[d][2] max_dist = max(max_dist, get_dist(x, y, z)) print &amp;quot;Part 1: &amp;quot;, get_dist(x, y, z) print &amp;quot;Part 2: &amp;quot;, max_dist  The best place to learn about hex grids that I&amp;rsquo;ve seen is Red Blob Games.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 10</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-10/</link>
+      <pubDate>Sun, 10 Dec 2017 10:18:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-10/</guid>
+      <description>For Day 10, the challenge is to hash a string using a &amp;ldquo;knot-based&amp;rdquo; hash algorithm. My Python solution is below:
+from functools import reduce class CircularList(list): def __getitem__(self, x): return super(CircularList, self).__getitem__(x % len(self)) def __setitem__(self, x, v): super(CircularList, self).__setitem__(x % len(self), v) def __getslice__(self, i, j): for n in range(i, j): yield self[n] def __setslice__(self, i, j, v): v = list(v) for iterator, n in enumerate(range(i, j)): self[n] = v[iterator] with open(&amp;quot;input.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 9</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-9/</link>
+      <pubDate>Sat, 09 Dec 2017 08:18:08 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-9/</guid>
+      <description>For Day 9, the challenge is to parse a stream of text and counting occurences of certain patterns. Heres my Python solution:
+with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: data = o.read() index = 0 current_score = 0 current_depth = 0 garbage_count = 0 def read(): global index if data[index] == &amp;quot;!&amp;quot;: index += 2 return read() d = data[index] index += 1 return d def read_garbage(): global index global garbage_count next_char = read() while not next_char == &amp;quot;&amp;gt;&amp;quot;: garbage_count += 1 next_char = read() def start_group(): global current_depth current_depth += 1 def end_group(): global current_score global current_depth current_score += current_depth current_depth -= 1 while index &amp;lt; len(data): next_char = read() if next_char == &amp;quot;{&amp;quot;: start_group() elif next_char == &amp;quot;}&amp;quot;: end_group() elif next_char == &amp;quot;&amp;lt;&amp;quot;: read_garbage() elif next_char == &amp;quot;,&amp;quot;: pass # Skip commas else: print &amp;quot;Unknown character: &amp;quot;, next_char print &amp;quot;Part 1:&amp;quot;, current_score print &amp;quot;Part 2:&amp;quot;, garbage_count  I think this could be done with a regex, but that would have taken me a lot longer to write and would be near unreadable.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 8</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-8/</link>
+      <pubDate>Fri, 08 Dec 2017 09:03:26 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-8/</guid>
+      <description>For Day 8, the challenge is to execute some simple instructions to manipulate registers, and then print some basic facts about the state of the registers. My Python solution is below:
+registers = {} highest_value = -99999 def check_condition(condition): register, command, value = condition.split(&amp;quot; &amp;quot;) value = int(value) if command == &amp;quot;&amp;gt;&amp;quot;: return registers.get(register, 0) &amp;gt; value elif command == &amp;quot;&amp;gt;=&amp;quot;: return registers.get(register, 0) &amp;gt;= value elif command == &amp;quot;&amp;lt;&amp;quot;: return registers.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 7</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-7/</link>
+      <pubDate>Fri, 08 Dec 2017 09:01:20 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-7/</guid>
+      <description>For Day 7, the challenge is to build a graph of running programs and dependencies and then adjust the weighting. My Python code is below:
+import Queue from collections import Counter class Program: def __init__(self, line): self.parent = None line = line.split(&amp;quot; -&amp;gt; &amp;quot;) if len(line) &amp;gt; 1: self.children = [l.strip() for l in line[1].split(&amp;quot;,&amp;quot;)] else: self.children = [] self.name, self.weight = line[0].split(&amp;quot; &amp;quot;) self.weight = int(self.weight.strip()[1:-1]) @property def total_weight(self): self.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 6</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-6/</link>
+      <pubDate>Wed, 06 Dec 2017 21:45:54 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-6/</guid>
+      <description>For Day 6, the challenge is to redistribute values in an array until we find a loop in the process. My Python 2 solution is below:
+def apply_redistribution(data): data = list(data) max_index = 0 max_value = data[0] for i in range(len(data)): if data[i] &amp;gt; max_value: max_index = i max_value = data[i] to_distribute = max_value data[max_index] = 0 i = max_index + 1 while to_distribute &amp;gt; 0: data[i % len(data)] += 1 i += 1 to_distribute -= 1 return tuple(data) with open(&amp;quot;input.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 5</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-5/</link>
+      <pubDate>Wed, 06 Dec 2017 21:41:29 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-5/</guid>
+      <description>For Day 5, the challenge is to calculate the number of steps needed to bounce around an array following one of two rulesets. My Python 2 solution is below:
+def simple_increment(i): return i + 1 def part_2_increment(i): return i - 1 if i &amp;gt;= 3 else i + 1 def play_maze(maze, increment=simple_increment): maze = maze[:] i = 0 steps = 0 while i &amp;gt;= 0 and i &amp;lt; len(maze): new_i = i + maze[i] maze[i] = increment(maze[i]) i = new_i steps += 1 return steps with open(&amp;quot;input.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 4</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-4/</link>
+      <pubDate>Wed, 06 Dec 2017 19:03:38 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-4/</guid>
+      <description>For Day 4, the challenge is to calculate the number of valid passphrases given some rules. My Python 2 solution is below:
+def is_valid(input, modification=None): hsh = set() for word in input.split(&amp;quot; &amp;quot;): if modification: word = modification(word) if word in hsh: return False hsh.add(word) return True with open(&amp;quot;input.txt&amp;quot;, &amp;quot;r&amp;quot;) as o: print &amp;quot;Part 1:&amp;quot;, len([line for line in o if is_valid(line.strip())]) print &amp;quot;Part 2:&amp;quot;, len([line for line in o if is_valid(line.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 3</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-3/</link>
+      <pubDate>Sun, 03 Dec 2017 08:53:41 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-3/</guid>
+      <description>For Day 3, the challenge is to calculate the Manhattan Distance for a given number given a formula for calculating a spiral of numbers. My initial brute force solution, in Javascript, is shown below:
+const UP = [0, -1]; const DOWN = [0, 1]; const LEFT = [-1, 0]; const RIGHT = [1, 0]; const X = 0; const Y = 1; function get_position(n) { let pos = [0, 0]; let x_range = [-1, 1]; let y_range = [-1, 1]; let direction = RIGHT; let number = 1; while (number &amp;lt; n) { number += 1 pos[X] += direction[X] pos[Y] += direction[Y] if (direction == RIGHT &amp;amp;&amp;amp; pos[X] == x_range[1]) { direction = UP; x_range[1] += 1; } else if (direction == LEFT &amp;amp;&amp;amp; pos[X] == x_range[0]) { direction = DOWN; x_range[0] -= 1; } else if (direction == UP &amp;amp;&amp;amp; pos[Y] == y_range[0]) { direction = LEFT; y_range[0] -= 1; } else if (direction == DOWN &amp;amp;&amp;amp; pos[Y] == y_range[1]) { direction = RIGHT; y_range[1] += 1; } } return pos; } const position = get_position(289326); console.</description>
+    </item>
+    
+    <item>
+      <title>Advent of Code: Day 2</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-2/</link>
+      <pubDate>Sat, 02 Dec 2017 08:22:53 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-2/</guid>
+      <description>For Day 2, the challenge is to calculate checksums based on either the largest difference between values or on values that are divisors of each other. I decided to try Ruby for it, here&amp;rsquo;s my solution:
+def line_checksum1(line) line = line.split(&amp;quot; &amp;quot;).map { |s| s.to_i } line.max - line.min end def line_checksum2(line) line = line.split(&amp;quot; &amp;quot;).map { |s| s.to_i } combination = line.combination(2).find { |p| p.max % p.min == 0} combination.</description>
+    </item>
+    
+    <item>
+      <title>Advent Of Code: Day 1</title>
+      <link>https://blog.jscott.me/post/advent-of-code-day-1/</link>
+      <pubDate>Fri, 01 Dec 2017 15:25:44 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/advent-of-code-day-1/</guid>
+      <description>This year I&amp;rsquo;ll be doing the Advent of Code in whatever language is most convenient on the day I do the challenge.
+For Day 1, the challenge is to sum up the digits of an input which are followed by the same digit (at some given offset). Here is my Python solution:
+def part_1(input, offset=1): return sum([int(input[i]) for i in range(len(input)) if input[i] == input[(i + offset) % len(input)]]) def part_2(input): return part_1(input, len(input) / 2)  The major part is a list comprehension over the indexes of the input string.</description>
+    </item>
+    
+    <item>
+      <title>Spring Wiring</title>
+      <link>https://blog.jscott.me/post/spring-wiring/</link>
+      <pubDate>Wed, 29 Nov 2017 16:24:59 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/spring-wiring/</guid>
+      <description>Spring is a large framework with a lot of moving parts. In this post and a few follow up posts, I&amp;rsquo;m going to cover some of the major components of Spring and explain how they fit together.
+Right now I&amp;rsquo;m just going to overview the ways that Spring allows for dependency injection. Later posts will cover other features of Spring.
+Spring
+Spring is an open source application framework for writing Java applications.</description>
+    </item>
+    
+    <item>
+      <title>Soft Skills: The software developer&#39;s life manual</title>
+      <link>https://blog.jscott.me/post/book-review-soft-skills/</link>
+      <pubDate>Wed, 22 Nov 2017 17:00:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/book-review-soft-skills/</guid>
+      <description>I&amp;rsquo;ve recently been reading Soft Skills: The software developer&amp;rsquo;s life manual, by John Sonmez.
+I haven&amp;rsquo;t previously encountered John&amp;rsquo;s work, but was recommended this book a few times as &amp;ldquo;an essential guide to a fulfilling software development career&amp;rdquo;.
+The book is different from most books aimed at developers in that it doesn&amp;rsquo;t cover a new language or technology, and doesn&amp;rsquo;t talk about managing people or building a good development culture. Instead it tries to provide overall life and career guidance.</description>
+    </item>
+    
+    <item>
+      <title>Lombok: Towards beautiful Java code</title>
+      <link>https://blog.jscott.me/post/lombok-towards-beautiful-java-code/</link>
+      <pubDate>Mon, 13 Nov 2017 17:00:00 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/lombok-towards-beautiful-java-code/</guid>
+      <description>def gcd(x: Long, y: Long): Long = if (y == 0) x else gcd(y, x % y)  Can you tell me what this code does?
+data class User(val name: String, val age: Int)  What about this?
+The first is a Scala implementation of Euclid&amp;rsquo;s algorithm for calculating the greatest common divisor. It says that if y is 0, the GCD of x and y is x, otherwise it&amp;rsquo;s the GCD of y and x mod y.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://blog.jscott.me/about/</link>
+      <pubDate>Sun, 12 Nov 2017 15:29:15 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/about/</guid>
+      <description>Jonathan Scott holds a PhD in Computer Science from the University of Southampton. His PhD work involved investigating online news discussions, and using graph algorithms and social network structures to select notable and representative content. See here for a list of publications.
+He previously worked at the BBC, first building and maintaining services to deliver personalised recommendations and notifications, and later designing algorithms for a new UGC moderation platform.
+He currently works as a Software Engineer at Google, working mainly on the Android Enterprise project.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code 2018: Day 3 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code 2018: Day 3" />
+<meta property="og:description" content="Part 1
+Part 1 involves taking a collection of &ldquo;claims&rdquo; which are rectangles, and calculating how many points exist in at least two claims.
+My solution is slow because of creating a Point for each coordinate. It could be sped up by replacing the Point with something lighter. It could also be sped up by doing a first sweep through the claims to find any pairs which overlap (using an appropriate data structure such as an R-Tree) and then calculating the overlap between overlapping pairs." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-2018-day-3/" />
+<meta property="article:published_time" content="2018-12-08T10:37:00+00:00" />
+<meta property="article:modified_time" content="2018-12-08T10:37:00+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code 2018: Day 3"/>
+<meta name="twitter:description" content="Part 1
+Part 1 involves taking a collection of &ldquo;claims&rdquo; which are rectangles, and calculating how many points exist in at least two claims.
+My solution is slow because of creating a Point for each coordinate. It could be sped up by replacing the Point with something lighter. It could also be sped up by doing a first sweep through the claims to find any pairs which overlap (using an appropriate data structure such as an R-Tree) and then calculating the overlap between overlapping pairs."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code 2018: Day 3</h1>
+			<div class="meta">Posted at &mdash; Dec 8, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<p><strong>Part 1</strong></p>
+
+<p>Part 1 involves taking a collection of &ldquo;claims&rdquo; which are rectangles, and calculating how many points exist in at least two claims.</p>
+
+<p>My solution is slow because of creating a Point for each coordinate. It could be sped up by replacing the Point with something lighter. It could also be sped up by doing a first sweep through the claims to find any pairs which overlap (using an appropriate data structure such as an R-Tree) and then calculating the overlap between overlapping pairs. The code for that is a bit more complicated so I didn&rsquo;t bother&hellip; Maybe I&rsquo;ll come back to it sometime.</p>
+
+<p><strong>Part 2</strong></p>
+
+<p>Part 2 just requires us to find the claim which does not overlap any others. For this I can reuse most of the code from part 1. I get all claims which have at least one overlapping claim, and then remove that from all claims.</p>
+
+<p>import java.awt.<em>;
+import java.util.</em>;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;</p>
+
+<p>class Claim {
+    private final String id;
+    private final Point p1;
+    private final Point p2;</p>
+
+<pre><code>// Example: #188 @ 397,394: 20x26s
+private static final Pattern CLAIM_STRING_PATTERN = Pattern.compile(&quot;#(\\d+) @ (\\d+),(\\d+): (\\d+)x(\\d+)&quot;);
+
+Claim(String claimString) {
+    Matcher matcher = CLAIM_STRING_PATTERN.matcher(claimString);
+    if (matcher.find()) {
+        String id = matcher.group(1);
+        int x1 = Integer.parseInt(matcher.group(2));
+        int y1 = Integer.parseInt(matcher.group(3));
+        int w = Integer.parseInt(matcher.group(4));
+        int h = Integer.parseInt(matcher.group(5));
+        int x2 = x1 + w;
+        int y2 = y1 + h;
+
+        this.id = id;
+        this.p1 = new Point(x1, y1);
+        this.p2 = new Point(x2, y2);
+    } else {
+        throw new IllegalArgumentException(String.format(&quot;Not a valid claimString: %s&quot;, claimString));
+    }
+}
+
+@Override
+public String toString() {
+    return String.format(&quot;#%s @ %d,%d: %dx%d&quot;, this.id, p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+}
+
+
+List&lt;Point&gt; calculateContainedPoints() {
+    List&lt;Point&gt; containedPoints = new ArrayList&lt;&gt;();
+
+    for (int x = p1.x; x &lt; p2.x; x++) {
+        for (int y = p1.y; y &lt; p2.y; y++) {
+            containedPoints.add(new Point(x, y));
+        }
+    }
+
+    return containedPoints;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>class OverlapDetector {
+    /** Count the number of points which exist in at least two claims. */
+    static int countOverlappingPoints(Collection<Claim> claims) {
+        return (int) calculatePointsToClaim(claims).values().stream()
+                .filter(o -&gt; o.size() &gt; 1).count();
+    }</p>
+
+<pre><code>/** Collect all claims which do not overlap any other claims. */
+static Collection&lt;Claim&gt; findNonOverlappingClaims(Collection&lt;Claim&gt; claims) {
+    Set&lt;Claim&gt; nonOverlappingClaims = new HashSet&lt;&gt;(claims);
+
+    Set&lt;Claim&gt; overlappingClaims =
+            calculatePointsToClaim(claims).values().stream()
+                    .filter(v -&gt; v.size() &gt; 1)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toSet());
+
+    nonOverlappingClaims.removeAll(overlappingClaims);
+
+    return nonOverlappingClaims;
+}
+
+private static Map&lt;Point, Set&lt;Claim&gt;&gt; calculatePointsToClaim(Collection&lt;Claim&gt; claims) {
+    Map&lt;Point, Set&lt;Claim&gt;&gt; overlaps = new HashMap&lt;&gt;();
+
+    for (Claim claim : claims) {
+        for (Point point : claim.calculateContainedPoints()) {
+            overlaps.putIfAbsent(point, new HashSet&lt;&gt;());
+            overlaps.get(point).add(claim);
+        }
+    }
+
+    return overlaps;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>public class Claims {
+    public static void main(String[] args) {
+        if (args.length &lt; 1) {
+            System.err.println(&ldquo;Error: First argument must be claims string&rdquo;);
+            System.exit(1);
+        }</p>
+
+<pre><code>    String claimsString = args[0];
+    Collection&lt;Claim&gt; claims = parseClaimsString(claimsString);
+
+    int overlaps = OverlapDetector.countOverlappingPoints(claims);
+    System.out.println(String.format(&quot;Counted %s overlapping coordinates&quot;, overlaps));
+
+    for (Claim nonOverlappingClaim : OverlapDetector.findNonOverlappingClaims(claims)) {
+        System.out.println(String.format(&quot;Non overlapping claim: %ss&quot;, nonOverlappingClaim));
+    }
+}
+
+private static Collection&lt;Claim&gt; parseClaimsString(String claimsString) {
+    return Arrays.stream(claimsString.split(&quot;\n&quot;))
+            .map(Claim::new)
+            .collect(Collectors.toList());
+}
+</code></pre>
+
+<p>}</p>
+
+<p><a href="http://adventofcode.com/">Advent Of Code runs until December 25. You should get involved!</a></p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

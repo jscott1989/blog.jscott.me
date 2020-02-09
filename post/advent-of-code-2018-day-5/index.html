@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Advent of Code 2018: Day 5 - JScott.me</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Advent of Code 2018: Day 5" />
+<meta property="og:description" content="Ooh that&rsquo;s better. Kotlin is a much better match for Advent of Code than Java. I&rsquo;ve never really used Kotlin in any meaningful way so would love to hear feedback if there&rsquo;s a better way I could be using it.
+Part 1
+Part 1 of today&rsquo;s task involves us being given a string of characters, inside which we should replace every pair of characters which are adjacent, and are the same character but different case." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://blog.jscott.me/post/advent-of-code-2018-day-5/" />
+<meta property="article:published_time" content="2018-12-09T12:46:45+00:00" />
+<meta property="article:modified_time" content="2018-12-09T12:46:45+00:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Advent of Code 2018: Day 5"/>
+<meta name="twitter:description" content="Ooh that&rsquo;s better. Kotlin is a much better match for Advent of Code than Java. I&rsquo;ve never really used Kotlin in any meaningful way so would love to hear feedback if there&rsquo;s a better way I could be using it.
+Part 1
+Part 1 of today&rsquo;s task involves us being given a string of characters, inside which we should replace every pair of characters which are adjacent, and are the same character but different case."/>
+<link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,300italic,400italic|Raleway:200,300" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/normalize.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="https://blog.jscott.me/css/main.css" />
+
+	
+	<script src="https://blog.jscott.me/js/main.js"></script>
+</head>
+
+<body>
+	<div class="container wrapper post">
+		<div class="header">
+	<h1 class="site-title"><a href="/">JScott.me</a></h1>
+	<div class="site-description"><nav class="nav social">
+			<ul class="flat"></ul>
+		</nav>
+	</div>
+
+	<nav class="nav">
+		<ul class="flat">
+			
+		</ul>
+	</nav>
+</div>
+
+
+		<div class="post-header">
+			<h1 class="title">Advent of Code 2018: Day 5</h1>
+			<div class="meta">Posted at &mdash; Dec 9, 2018</div>
+		</div>
+
+		<div class="markdown">
+			<p>Ooh that&rsquo;s better. Kotlin is a much better match for Advent of Code than Java. I&rsquo;ve never really used Kotlin in any meaningful way so would love to hear feedback if there&rsquo;s a better way I could be using it.</p>
+
+<p><strong>Part 1</strong></p>
+
+<p>Part 1 of today&rsquo;s task involves us being given a string of characters, inside which we should replace every pair of characters which are adjacent, and are the same character but different case. We must do this iteratively until no matches remain.</p>
+
+<p>For example, in the string &ldquo;dabAcCaCBAcCcaDA&rdquo; the following steps would be taken:</p>
+
+<pre><code>dabAcCaCBAcCcaDA  The first 'cC' is removed.
+dabAaCBAcCcaDA    This creates 'Aa', which is removed.
+dabCBAcCcaDA      Either 'cC' or 'Cc' are removed (the result is the same).
+dabCBAcaDA        No further actions can be taken.
+</code></pre>
+
+<p>Leaving 10 characters, which is our answer.</p>
+
+<p>For my solution a String isn&rsquo;t ideal as it is not mutable, so I first convert it to a StringBuilder. From there it&rsquo;s just a matter of iterating through each pair, and removing any matches - moving back each time there is to check if that creates a new match. This is O(n) complexity.</p>
+
+<pre><code class="language-language-kotlin">import java.lang.StringBuilder
+
+fun main(args: Array&lt;String&gt;) {
+    if (args.isEmpty()) {
+        System.err.print(&quot;First argument should be polymer string&quot;)
+        System.exit(-1)
+    }
+
+    val polymerString = args[0]
+    val reducedPolymerString = reducePolymerString(polymerString)
+    println(&quot;Part 1: &quot; + reducedPolymerString.length)
+}
+
+fun reducePolymerString(polymerString: String): String {
+    val reducedPolymerBuilder = StringBuilder(polymerString)
+
+    var ptr = 0
+
+    while (ptr &lt; reducedPolymerBuilder.length - 1) {
+        if (polymerMatches(reducedPolymerBuilder[ptr], reducedPolymerBuilder[ptr + 1])) {
+            // Match - reduce
+            reducedPolymerBuilder.delete(ptr, ptr + 2)
+
+            if (ptr &gt; 0) {
+                // We need to check if this creates a match with the previous character
+                ptr--
+            }
+        } else {
+            ptr++
+        }
+    }
+
+    return reducedPolymerBuilder.toString()
+}
+
+fun polymerMatches(a: Char, b: Char): Boolean {
+    return a.toLowerCase() == b.toLowerCase() &amp;&amp; a != b
+}
+</code></pre>
+
+<p><strong>Part 2</strong></p>
+
+<p>For Part 2 we need to remove a single &ldquo;unit type&rdquo; (character pair) and find create the shortest reduced form. To do this, I generate a regular expression to match each pair, do the replacement and generate the reduced string - recording the shortest.</p>
+
+<p>Kotlin is a really nice language for this sort of script.</p>
+
+<pre><code class="language-language-kotlin">val alphabet = CharArray(26) { (it + 97).toChar() }
+val replaceRegex = alphabet.map { Regex(&quot;[&quot; + it + it.toUpperCase() + &quot;]&quot;) }
+
+var minLength = polymerString.length
+for (r in replaceRegex) {
+    val reduced = reducePolymerString(polymerString.replace(r, &quot;&quot;))
+    if (reduced.length &lt; minLength) {
+        minLength = reduced.length
+    }
+}
+
+print(&quot;Minimum achieved my removing one character: &quot; + minLength)
+</code></pre>
+
+<p><a href="http://adventofcode.com/">Advent Of Code runs until December 25. You should get involved!</a></p>
+
+		</div>
+
+		<div class="post-tags">
+			
+				
+			
+		</div><div id="disqus_thread"></div>
+<script type="text/javascript">
+	(function () {
+		
+		
+		if (window.location.hostname == "localhost")
+			return;
+
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		var disqus_shortname = '';
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+		Disqus.</a></noscript>
+<a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+	<div class="footer wrapper">
+	<nav class="nav">
+		<div> <a href="https://github.com/vividvilla/ezhil">Ezhil theme</a> | Built with <a href="https://gohugo.io">Hugo</a></div>
+	</nav>
+</div>
+
+
+</body>
+</html>

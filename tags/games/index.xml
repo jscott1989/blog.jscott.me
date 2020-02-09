@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>games on JScott.me</title>
+    <link>https://blog.jscott.me/tags/games/</link>
+    <description>Recent content in games on JScott.me</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Sun, 04 Mar 2018 09:36:41 +0000</lastBuildDate>
+    
+	<atom:link href="https://blog.jscott.me/tags/games/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>One Hour One Life</title>
+      <link>https://blog.jscott.me/post/one-hour-one-life/</link>
+      <pubDate>Sun, 04 Mar 2018 09:36:41 +0000</pubDate>
+      
+      <guid>https://blog.jscott.me/post/one-hour-one-life/</guid>
+      <description>Last Week, Jason Rohrer released his latest game, and it&amp;rsquo;s full of interesting ideas that are worth having a play with.
+A couple of years ago, my wife and I created Story of Everyone, which experimented with collaborative content creation and player familial relationships.
+Given the limitations imposed by the competition, the results were of course limited, but we did find some sort of in-game &amp;ldquo;culture&amp;rdquo; building where players would riff off the content contributed by others, creating interesting in-game narratives.</description>
+    </item>
+    
+  </channel>
+</rss>

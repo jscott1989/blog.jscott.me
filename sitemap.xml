@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-2018-day-5/</loc>
+    <lastmod>2018-12-09T12:46:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/</loc>
+    <lastmod>2018-12-09T12:46:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/</loc>
+    <lastmod>2018-12-09T12:46:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-2018-day-4/</loc>
+    <lastmod>2018-12-09T12:19:44+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-2018-day-3/</loc>
+    <lastmod>2018-12-08T10:37:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code/</loc>
+    <lastmod>2018-12-02T10:30:40+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-2018-day-1/</loc>
+    <lastmod>2018-12-01T11:05:39+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/reviewing-data-structures-and-algorithms/</loc>
+    <lastmod>2018-09-02T17:15:55+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/edinburgh-fringe-festival-2018/</loc>
+    <lastmod>2018-08-23T12:59:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/dottest/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/dottest/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/dottest/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/programming/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/programming/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/python/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/python/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/</loc>
+    <lastmod>2018-04-28T15:23:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/i-want-to-change-my-password/</loc>
+    <lastmod>2018-03-31T09:10:29+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/aws/</loc>
+    <lastmod>2018-03-19T09:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/aws/</loc>
+    <lastmod>2018-03-19T09:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/using-lifecycle-hooks-to-better-understand-your-aws-environment/</loc>
+    <lastmod>2018-03-19T09:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/the-facts-and-fallacies-of-software-engineering/</loc>
+    <lastmod>2018-03-12T09:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/games/</loc>
+    <lastmod>2018-03-04T09:36:41+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/games/</loc>
+    <lastmod>2018-03-04T09:36:41+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/one-hour-one-life/</loc>
+    <lastmod>2018-03-04T09:36:41+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/algorithms-to-live-by/</loc>
+    <lastmod>2018-01-08T09:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/book-review/</loc>
+    <lastmod>2018-01-08T09:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/book-review/</loc>
+    <lastmod>2018-01-08T09:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-haskell-day-1/</loc>
+    <lastmod>2018-01-07T09:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-25/</loc>
+    <lastmod>2017-12-25T12:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-23/</loc>
+    <lastmod>2017-12-24T19:32:06+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-22/</loc>
+    <lastmod>2017-12-24T19:29:08+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-21/</loc>
+    <lastmod>2017-12-24T15:36:25+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day/</loc>
+    <lastmod>2017-12-24T15:35:34+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-24/</loc>
+    <lastmod>2017-12-24T09:49:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-19/</loc>
+    <lastmod>2017-12-19T18:51:31+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-18/</loc>
+    <lastmod>2017-12-19T18:35:02+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-17/</loc>
+    <lastmod>2017-12-17T10:09:59+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-16/</loc>
+    <lastmod>2017-12-16T08:42:33+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-15/</loc>
+    <lastmod>2017-12-15T20:31:24+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-14/</loc>
+    <lastmod>2017-12-15T20:28:56+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-13/</loc>
+    <lastmod>2017-12-13T20:44:08+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-12/</loc>
+    <lastmod>2017-12-12T09:17:11+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-11/</loc>
+    <lastmod>2017-12-12T09:07:11+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-10/</loc>
+    <lastmod>2017-12-10T10:18:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-9/</loc>
+    <lastmod>2017-12-09T08:18:08+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-8/</loc>
+    <lastmod>2017-12-08T09:03:26+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-7/</loc>
+    <lastmod>2017-12-08T09:01:20+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-6/</loc>
+    <lastmod>2017-12-06T21:45:54+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-5/</loc>
+    <lastmod>2017-12-06T21:41:29+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-4/</loc>
+    <lastmod>2017-12-06T19:03:38+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-3/</loc>
+    <lastmod>2017-12-03T08:53:41+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-2/</loc>
+    <lastmod>2017-12-02T08:22:53+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/advent-of-code-day-1/</loc>
+    <lastmod>2017-12-01T15:25:44+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/java/</loc>
+    <lastmod>2017-11-29T16:24:59+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/java/</loc>
+    <lastmod>2017-11-29T16:24:59+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/spring/</loc>
+    <lastmod>2017-11-29T16:24:59+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/spring/</loc>
+    <lastmod>2017-11-29T16:24:59+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/spring-wiring/</loc>
+    <lastmod>2017-11-29T16:24:59+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/book-review-soft-skills/</loc>
+    <lastmod>2017-11-22T17:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/categories/lombok/</loc>
+    <lastmod>2017-11-13T17:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/tags/lombok/</loc>
+    <lastmod>2017-11-13T17:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/post/lombok-towards-beautiful-java-code/</loc>
+    <lastmod>2017-11-13T17:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://blog.jscott.me/about/</loc>
+    <lastmod>2017-11-12T15:29:15+00:00</lastmod>
+  </url>
+  
+</urlset>
